@@ -17,6 +17,9 @@ client = discord.Client(intents=intents)
 @client.event
 async def on_ready():
     print(f'Logged in as {client.user}')
+    channel = client.get_channel(1427570847241207910)  # replace with your
+    await channel.send('Bot is now online!')
+    activity = discord.Game(name="Stroking...")
 
 @client.event
 async def on_message(message):
