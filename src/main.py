@@ -14,7 +14,7 @@ client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
-    print(f'We have logged in as {client.user}')
+    print(f'Logged in as {client.user}')
 
 @client.event
 async def on_message(message):
@@ -24,6 +24,9 @@ async def on_message(message):
     if "keystrokers" in message.content.lower():
         await message.add_reaction("🔑")
         await message.add_reaction("👋")
+
+    if "stroke" in message.content.lower():
+        await message.channel.send('Currently stroking...')
 
 print(f"TOKEN loaded: {token!r}")
 client.run(token)
