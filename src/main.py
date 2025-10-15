@@ -46,11 +46,11 @@ async def on_message(message):
         else:
             await message.channel.send("❌ I'm not in a voice channel.")
 
-    if message.content.contains("update bot"):
+    if "update bot" in message.content.lower():
         await message.channel.send("Updating bot...")
         subprocess.run("./roll-out.sh")
 
-    if message.content.contains("test bot"):
+    if "test bot" in message.content.lower():
         await message.channel.send("Updating to test suite...")
         subprocess.run("./testing.sh")
 
