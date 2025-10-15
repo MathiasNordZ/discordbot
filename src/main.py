@@ -3,6 +3,7 @@
 import os
 from dotenv import load_dotenv
 import discord
+import subprocess
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -43,6 +44,10 @@ async def on_message(message):
             await message.channel.send("👋 Left the voice channel.")
         else:
             await message.channel.send("❌ I'm not in a voice channel.")
+
+    if message.content.startswith("update bot"):
+        await message.channel.send("Updating bot...")
+        subprocess.run("./roll-out.sh")
 
 
 print(f"TOKEN loaded: {token!r}")
