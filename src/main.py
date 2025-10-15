@@ -21,11 +21,9 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
-
     if "keystrokers" in message.content.lower():
-        await message.add_reaction("🔑"), message.add_reaction("👋")
+        await message.add_reaction("🔑")
+        await message.add_reaction("👋")
 
 print(f"TOKEN loaded: {token!r}")
 client.run(token)
