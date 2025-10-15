@@ -19,7 +19,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    message.channel.send("Bot Updated")
+    message.send("Bot Updated")
     if message.author == client.user:
         return
 
