@@ -24,5 +24,8 @@ async def on_message(message):
     if message.content.startswith('$hello'):
         await message.channel.send('Hello!')
 
+    if "keystrokers" in message.content.lower():
+        await message.channel.send('Stroking my key')
+
 print(f"TOKEN loaded: {token!r}")
 client.run(token)
