@@ -57,7 +57,8 @@ async def on_message(message):
 
     if message.content.startswith("base64"):
         message_bytes = base64.b64decode(message.content[6:].strip())
-        await message.channel.send(message_bytes)
+        message_string = message_bytes[2:-1]
+        await message.channel.send(message_string)
 
 print(f"TOKEN loaded: {token!r}")
 client.run(token)
