@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 import discord
 import subprocess
+import base64
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -45,14 +46,18 @@ async def on_message(message):
         else:
             await message.channel.send("❌ I'm not in a voice channel.")
 
-    if message.content.startswith("update bot"):
+    if message.content.contains("update bot"):
         await message.channel.send("Updating bot...")
         subprocess.run("./roll-out.sh")
 
-    if message.content.startswith("test bot"):
+    if message.content.contains("test bot"):
         await message.channel.send("Updating to test suite...")
         subprocess.run("./testing.sh")
 
+
+    if message.content.startswith("base64"):
+        message_bytes = base64.b64decode(message.content[6:].strip())
+        await message.channel.send(message_bytes)
 
 print(f"TOKEN loaded: {token!r}")
 client.run(token)
