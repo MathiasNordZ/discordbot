@@ -50,6 +50,10 @@ async def on_message(message):
         await message.channel.send("Updating bot...")
         subprocess.run("./roll-out.sh")
 
+    if message.content.startswith("test bot"):
+        await message.channel.send("Updating to test suite...")
+        subprocess.run("./testing.sh")
+
 
 print(f"TOKEN loaded: {token!r}")
 client.run(token)
