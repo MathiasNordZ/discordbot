@@ -3,6 +3,7 @@
 import os
 from dotenv import load_dotenv
 import discord
+import subprocess
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -14,15 +15,41 @@ client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
-    print(f'We have logged in as {client.user}')
+    print(f'Logged in as {client.user}')
 
 @client.event
 async def on_message(message):
+    message.send("Bot Updated")
     if message.author == client.user:
         return
 
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
+    if "keystrokers" in message.content.lower():
+        await message.add_reaction("🔑")
+        await message.add_reaction("👋")
+
+    if "stroke" in message.content.lower():
+        await message.channel.send('Currently stroking...')
+
+    if "join" in message.content.lower():
+        if message.author.voice:  # user is in a voice channel
+            channel = message.author.voice.channel
+            await channel.connect()
+            await message.channel.send(f"🔊 Joined {channel.name}!")
+        else:
+            await message.channel.send("❌ You need to be in a voice channel first!")
+
+        # Leave voice channel
+    elif "leave" in message.content.lower():
+        if message.guild.voice_client:
+            await message.guild.voice_client.disconnect()
+            await message.channel.send("👋 Left the voice channel.")
+        else:
+            await message.channel.send("❌ I'm not in a voice channel.")
+
+    if message.content.startswith("update bot"):
+        await message.channel.send("Updating bot...")
+        subprocess.run("./roll-out.sh")
+
 
 print(f"TOKEN loaded: {token!r}")
 client.run(token)
