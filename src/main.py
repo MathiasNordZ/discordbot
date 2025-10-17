@@ -58,17 +58,9 @@ async def on_message(message):
             await message.channel.send("Updating to test suite...")
             subprocess.run(["./testing.sh"])
 
-        elif command.startswith("base64"):
-            b64_payload = raw[len("base64"):].strip()
-            try:
-                message_bytes = base64.b64decode(b64_payload)
-                try:
-                    decoded = message_bytes.decode("utf-8")
-                    await message.channel.send(decoded)
-                except Exception:
-                    await message.channel.send(f"Decoded bytes: {message_bytes!r}")
-            except Exception as e:
-                await message.channel.send(f"Base64 decode error: {e}")
+        elif message.content.startswith("base64"):
+            message_bytes = base64.b64decode(message.content[6:].strip())
+            await message.channel.send(message_bytes)
 
         #shows time until EPT CTF 8.nov 2025
         elif "ept" in message.content.lower():
