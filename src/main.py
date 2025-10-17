@@ -71,9 +71,9 @@ async def on_message(message):
 
     raw = message.content
     content = raw.lower().strip()
-    command = content[len("key "):].strip()
 
     if content.startswith("key "):
+        command = content[len("key "):].strip()
         command.cotent.lower = {
             "stroke": sendStrokingMessage(message),
             "join": joinVoice(message),
