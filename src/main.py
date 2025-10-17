@@ -78,7 +78,7 @@ async def on_message(message):
             days, seconds = delta.days, delta.seconds
             hours = seconds // 3600
             minutes = (seconds % 3600) // 60
-            await message.channel.send(f"Time until EPT CTF: {days} days, {hours} hours, and {minutes} minutes.")
+            await message.channel.send(f"Time until EPT CTF: {days} days, {hours} hours, and {minutes} minutes 💦💦💦")
 
     # Standalone keyword checks
     if "keystrokers" in message.content.lower():
