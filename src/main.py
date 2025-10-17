@@ -44,6 +44,17 @@ async def testBot(message):
     await message.channel.send("Updating to test suite...")
     subprocess.run("./testing.sh")
 
+async def decryptBase64(b64_payload, message):
+    try:
+        message_bytes = base64.b64decode(b64_payload)
+        try:
+            decoded = message_bytes.decode("utf-8")
+            await message.channel.send(decoded)
+        except Exception:
+            await message.channel.send(f"Decoded bytes: {message_bytes!r}")
+    except Exception as e:
+        await message.channel.send(f"Base64 decode error: {e}")
+
 
 @client.event
 async def on_ready():
@@ -57,13 +68,27 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    raw = message.content
+    content = raw.lower().strip()
+    command = content[len("key "):].strip()
+
+    if content.startswith("key "):
+        command.cotent.lower = {
+            "stroke": sendStrokingMessage(message),
+            "join": joinVoice(message),
+            "leave": leaveVoice(message),
+            "update bot": updateBot(message),
+            "test bot": testBot(message)
+    }
+    elif "keystrokers" in message:
+        await keystrokersReact(message)
+    elif content.satswith("base64 "):
+        b64_payload = raw[len("base64"):].strip()
+        await decryptBase64(b64_payload, message)
+
+
     message.content.lower = {
         "keystrokers": keystrokersReact(message),
-        "stroke": sendStrokingMessage(message),
-        "join": joinVoice(message),
-        "leave": leaveVoice(message),
-        "update bot": updateBot(message),
-        "test bot": testBot(message)
     }
 
 
