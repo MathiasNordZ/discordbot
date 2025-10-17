@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import discord
 import subprocess
 import base64
+import datetime as td
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -68,6 +69,16 @@ async def on_message(message):
                     await message.channel.send(f"Decoded bytes: {message_bytes!r}")
             except Exception as e:
                 await message.channel.send(f"Base64 decode error: {e}")
+
+        #shows time until EPT CTF 8.nov 2025
+        elif "ept" in message.content.lower():
+            event_date = td.datetime(2025, 11, 8)
+            now = td.datetime.now()
+            delta = event_date - now
+            days, seconds = delta.days, delta.seconds
+            hours = seconds // 3600
+            minutes = (seconds % 3600) // 60
+            await message.channel.send(f"Time until EPT CTF: {days} days, {hours} hours, and {minutes} minutes.")
 
     # Standalone keyword checks
     if "keystrokers" in message.content.lower():
