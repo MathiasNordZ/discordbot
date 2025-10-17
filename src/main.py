@@ -29,15 +29,10 @@ async def on_message(message):
     # Checks if a message starts with stroke
     # Stroke is a keyword that triggers the bot to respond
     # The bot will then process the rest of the message
-    if message.content.startswith("stroke"):
+    if message.content.startswith("stroke").lower():
         command = message.content[len("stroke"):].strip()
 
-        if "keystrokers" in command or "keystrokers" in message.content:
-            await message.add_reaction("🔑")
-            await message.add_reaction("👋")
-            await message.add_reaction("💦")
-
-        elif "join" in command or "keystrokers" in message.content.lower():
+        if "join" in command or "keystrokers" in message.content.lower():
             if message.author.voice:  # user is in a voice channel
                 channel = message.author.voice.channel
                 await channel.connect()
@@ -64,6 +59,12 @@ async def on_message(message):
             message_bytes = base64.b64decode(message.content[6:].strip())
 
             await message.channel.send(message_bytes)
+
+
+    elif "keystrokers" in message.content.tolower():
+        await message.add_reaction("🔑")
+        await message.add_reaction("👋")
+        await message.add_reaction("💦")
 
 print(f"TOKEN loaded: {token!r}")
 client.run(token)
