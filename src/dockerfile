@@ -1,0 +1,7 @@
+FROM ubuntu:24.04
+
+WORKDIR /discordbot
+COPY . /discordbot
+RUN python3 src/main.py
+RUN apt install python3
+CMD ["./roll-out.sh"]%
