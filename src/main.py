@@ -29,10 +29,10 @@ async def on_message(message):
     # Checks if a message starts with stroke
     # Stroke is a keyword that triggers the bot to respond
     # The bot will then process the rest of the message
-    if "key" in message.content.startswith.lower():
+    if "key" in message.content.startswith.tolower():
         command = message.content[len("key"):].strip()
 
-        if "join" in command or "keystrokers" in message.content.lower():
+        if "join" in command or "keystrokers" in message.content.tolower():
             if message.author.voice:  # user is in a voice channel
                 channel = message.author.voice.channel
                 await channel.connect()
@@ -40,18 +40,18 @@ async def on_message(message):
             else:
                 await message.channel.send("❌ You need to be in a voice channel first!")
 
-        elif "leave" in command.lower():
+        elif "leave" in command.tolower():
             if message.guild.voice_client:
                 await message.guild.voice_client.disconnect()
                 await message.channel.send("👋 Left the voice channel.")
             else:
                 await message.channel.send("❌ I'm not in a voice channel.")
 
-        elif "update bot" in command.lower():
+        elif "update bot" in command.tolower():
             await message.channel.send("Updating bot...")
             subprocess.run("./roll-out.sh")
 
-        elif "test bot" in command.lower():
+        elif "test bot" in command.tolower():
             await message.channel.send("Updating to test suite...")
             subprocess.run("./testing.sh")
 
@@ -61,7 +61,7 @@ async def on_message(message):
             await message.channel.send(message_bytes)
 
 
-    elif "keystrokers" in message.content.lower():
+    elif "keystrokers" in message.content.tolower():
         await message.add_reaction("🔑")
         await message.add_reaction("👋")
         await message.add_reaction("💦")
