@@ -31,10 +31,10 @@ async def on_message(message):
     content = raw.lower().strip()
 
     # Trigger: messages starting with "key"
-    if content.startswith("key"):
-        command = content[len("key"):].strip()
+    if content.startswith("key "):
+        command = content[len("key "):].strip()
 
-        if "join" in command or "keystrokers" in content:
+        if "join" in command or "join" in content:
             if message.author.voice:
                 channel = message.author.voice.channel
                 await channel.connect()
