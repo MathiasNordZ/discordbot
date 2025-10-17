@@ -17,6 +17,7 @@ client = discord.Client(intents=intents)
 async def keystrokersReact(message):
     await message.add_reaction("🔑")
     await message.add_reaction("👋")
+    await message.add_reaction("💦")
 
 async def sendStrokingMessage(message):
     await message.channel.send('Currently stroking...')
