@@ -26,42 +26,44 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if "keystrokers" in message.content.lower():
-        await message.add_reaction("🔑")
-        await message.add_reaction("👋")
+    # Checks if a message starts with stroke
+    # Stroke is a keyword that triggers the bot to respond
+    # The bot will then process the rest of the message
+    if message.content.startswith("stroke"):
+        command = message.content[len("stroke"):].strip()
 
-    if "stroke" in message.content.lower():
-        await message.channel.send('Currently stroking...')
+        if "keystrokers" in command or "keystrokers" in message.content:
+            await message.add_reaction("🔑")
+            await message.add_reaction("👋")
+            await message.add_reaction("💦")
 
-    if "join" in message.content.lower():
-        if message.author.voice:  # user is in a voice channel
-            channel = message.author.voice.channel
-            await channel.connect()
-            await message.channel.send(f"🔊 Joined {channel.name}!")
-        else:
-            await message.channel.send("❌ You need to be in a voice channel first!")
+        elif "join" in command or "keystrokers" in message.content.lower():
+            if message.author.voice:  # user is in a voice channel
+                channel = message.author.voice.channel
+                await channel.connect()
+                await message.channel.send(f"🔊 Joined {channel.name}!")
+            else:
+                await message.channel.send("❌ You need to be in a voice channel first!")
 
-        # Leave voice channel
-    elif "leave" in message.content.lower():
-        if message.guild.voice_client:
-            await message.guild.voice_client.disconnect()
-            await message.channel.send("👋 Left the voice channel.")
-        else:
-            await message.channel.send("❌ I'm not in a voice channel.")
+        elif "leave" in command.lower():
+            if message.guild.voice_client:
+                await message.guild.voice_client.disconnect()
+                await message.channel.send("👋 Left the voice channel.")
+            else:
+                await message.channel.send("❌ I'm not in a voice channel.")
 
-    if "update bot" in message.content.lower():
-        await message.channel.send("Updating bot...")
-        subprocess.run("./roll-out.sh")
+        elif "update bot" in command.lower():
+            await message.channel.send("Updating bot...")
+            subprocess.run("./roll-out.sh")
 
-    if "test bot" in message.content.lower():
-        await message.channel.send("Updating to test suite...")
-        subprocess.run("./testing.sh")
+        elif "test bot" in command.lower():
+            await message.channel.send("Updating to test suite...")
+            subprocess.run("./testing.sh")
 
+        elif command.startswith("base64"):
+            message_bytes = base64.b64decode(message.content[6:].strip())
 
-    if message.content.startswith("base64"):
-        message_bytes = base64.b64decode(message.content[6:].strip())
-
-        await message.channel.send(message_bytes)
+            await message.channel.send(message_bytes)
 
 print(f"TOKEN loaded: {token!r}")
 client.run(token)
