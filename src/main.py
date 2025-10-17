@@ -58,7 +58,7 @@ async def on_message(message):
             await message.channel.send("Updating to test suite...")
             subprocess.run(["./testing.sh"])
 
-        elif message.content.startswith("base64"):
+        elif "base64" in command:
             message_bytes = base64.b64decode(message.content[6:].strip())
             await message.channel.send(message_bytes)
 
