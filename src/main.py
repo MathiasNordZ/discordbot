@@ -70,7 +70,7 @@ async def on_message(message):
                 await message.channel.send(f"Base64 decode error: {e}")
 
     # Standalone keyword checks
-    if "keystrokers" in message.content.toLowerCase():
+    if "keystrokers" in message.content():
         await message.add_reaction("🔑")
         await message.add_reaction("👋")
         await message.add_reaction("💦")
