@@ -48,6 +48,9 @@ async def on_message(message):
     if content.startswith("key "):
         command = content[len("key "):].strip()
 
+        if "help" in command:
+            await message.channel.send(mtd.help())
+
         if "halloween" in command:
             await message.channel.send(mtd.biletter())
 
