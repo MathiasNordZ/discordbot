@@ -7,6 +7,7 @@ import subprocess
 import base64
 import datetime as td
 import urllib.request
+import methods as mtd
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -48,10 +49,7 @@ async def on_message(message):
         command = content[len("key "):].strip()
 
         if "halloween" in command:
-            if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
-                await message.channel.send(f"Tickets available at {link}")
-            else:
-                await message.channel.send("No tickets yet!")
+            await message.channel.send(mtd.biletter())
 
         if "join" in command or "join" in content:
             if message.author.voice:
@@ -70,34 +68,17 @@ async def on_message(message):
 
         elif "update bot" in command:
             await message.channel.send("Updating bot...")
-            subprocess.run(["./roll-out.sh"])
+            mtd.updateBot() #Må kalles her fordi return må være sist i en metode og scriptet dreper prosessen så den kjører aldri message send....
 
         elif "test bot" in command:
-            await message.channel.send("Updating to test suite...")
-            subprocess.run(["./testing.sh"])
-
+            await message.channel.send("Updating bot to test suite...")
+            mtd.testBot() #Må kalles her fordi return må være sist i en metode og scriptet dreper prosessen så den kjører aldri message send....
 
         elif command.startswith("base64"):
-            message_bytes = base64.b64decode(message.content[6:].strip())
-            await message.channel.send(f"Decoded base64: {message_bytes.decode('utf-8', errors='ignore')}")
+            await message.channel.send(mtd.base64(message.content[6:].strip()))
 
         elif "ept" in message.content.lower():
-            event_date = td.datetime(2025, 11, 8, 10)
-            now = td.datetime.now()
-            delta = event_date - now
-            days, seconds = delta.days, delta.seconds
-            hours = seconds // 3600
-            minutes = (seconds % 3600) // 60
-            await message.channel.send(f"Time until EPT CTF: {days} days, {hours} hours, and {minutes} minutes.")
-
-        elif "sem_goon" in message.content.lower():
-            await message.channel.send("sem_init()")
-            await message.channel.send("sem_wait()")
-            await message.channel.send("sem_post()")
-            await message.channel.send("💦💦💦")
-
-        elif "huzz" in message.content.lower():
-            await message.channel.send("https://cdn.discordapp.com/attachments/1276515217517318178/1428704557571244092/tenor.gif")
+            await message.channel.send(mtd.ept())
 
     # Standalone keyword checks
     if "keystrokers" in message.content.lower():
