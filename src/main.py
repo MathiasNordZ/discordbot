@@ -1,9 +1,12 @@
 import os
+
+from discord.ext import tasks
 from dotenv import load_dotenv
 import discord
 import subprocess
 import base64
 import datetime as td
+import urllib.request
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -12,10 +15,19 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = discord.Client(intents=intents)
+link = "https://huset.ticketco.events/no/nb/e/halloweenfest__huset"
+
+@tasks.loop(seconds=20)
+async def check_for_tickets():
+    if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
+        await client.get_channel(1414953421982924810).send(f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
+        check_for_tickets.stop()
 
 @client.event
 async def on_ready():
     print(f'Logged in as {client.user}')
+    if not check_for_tickets.is_running():
+        check_for_tickets.start()
     channel = client.get_channel(1427570847241207910)  # replace with your channel id
     if channel:
         await channel.send('Bot is now online!')
@@ -34,6 +46,12 @@ async def on_message(message):
     # Trigger: messages starting with "key"
     if content.startswith("key "):
         command = content[len("key "):].strip()
+
+        if "halloween" in command:
+            if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
+                await message.channel.send(f"Tickets available at {link}")
+            else:
+                await message.channel.send("No tickets yet!")
 
         if "join" in command or "join" in content:
             if message.author.voice:
