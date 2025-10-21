@@ -3,6 +3,7 @@
 # This script automates the update and deployment of a discord bot
 
 kill $(pgrep -f 'main.py')
+git reset --hard origin/main
 git pull origin main
 python3 src/main.py &
 echo "Bot updated and restarted."
