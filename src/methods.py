@@ -17,7 +17,7 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 def help():
-    helpText = ("Use key as keyword to get started!   eks: key ept\n    ept: Shows time until the EPT CTF\n    base64: Use base64 xxxx== to decode base64 directly\n   sem_goon: Shows the sem goon pipeline\n  huzz: Shows the huzz\n \n   update/test bot pulls most recent version in either main or testing branch")
+    helpText = ("Use key as keyword to get started!   eks: key ept\n\n\nept: Shows time until the EPT CTF\n\nbase64: Use base64 xxxx== to decode base64 directly\n \nsem_goon: Shows the sem goon pipeline\n\nhuzz: Shows the huzz\n\n\nupdate/test bot pulls most recent version in either main or testing branch")
 
     return helpText
 
