@@ -16,6 +16,11 @@ intents.message_content = True
 
 client = discord.Client(intents=intents)
 
+def help():
+    helpText = ("Use key as keyword to get started!   eks: key ept\n    ept: Shows time until the EPT CTF\n    base64: Use base64 xxxx== to decode base64 directly\n   sem_goon: Shows the sem goon pipeline\n  huzz: Shows the huzz\n \n   update/test bot pulls most recent version in either main or testing branch")
+
+    return helpText
+
 
 def biletter():
     if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
