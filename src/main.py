@@ -21,8 +21,10 @@ link = "https://huset.ticketco.events/no/nb/e/halloweenfest__huset"
 @tasks.loop(seconds=20)
 async def check_for_tickets():
     if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
-        await client.get_channel(1414953421982924810).send(f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
+        await client.get_channel(1414953421982924810).send(
+            f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
         check_for_tickets.stop()
+
 
 @client.event
 async def on_ready():
