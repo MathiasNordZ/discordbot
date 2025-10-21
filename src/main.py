@@ -15,8 +15,8 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = discord.Client(intents=intents)
-link = "https://huset.ticketco.events/no/nb/e/halloweenfest__huset"
 
+link = "https://huset.ticketco.events/no/nb/e/halloweenfest__huset"
 @tasks.loop(seconds=20)
 async def check_for_tickets():
     if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
