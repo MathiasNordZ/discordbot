@@ -49,10 +49,10 @@ async def on_message(message):
         command = content[len("key "):].strip()
 
         if "help" in command:
-            await message.channel.send(mtd.help())
+            await message.channel.send(mtd.help(message))
 
         if "halloween" in command:
-            await message.channel.send(mtd.biletter())
+            await message.channel.send(mtd.biletter(message, link))
 
         if "join" in command or "join" in content:
             if message.author.voice:
@@ -71,25 +71,27 @@ async def on_message(message):
 
         elif "update bot" in command:
             await message.channel.send("Updating bot...")
-            mtd.updateBot() #Må kalles her fordi return må være sist i en metode og scriptet dreper prosessen så den kjører aldri message send....
+            mtd.updateBot(message) #Må kalles her fordi return må være sist i en metode og scriptet dreper prosessen så den kjører aldri message send....
 
         elif "test bot" in command:
             await message.channel.send("Updating bot to test suite...")
-            mtd.testBot() #Må kalles her fordi return må være sist i en metode og scriptet dreper prosessen så den kjører aldri message send....
+            mtd.testBot(message) #Må kalles her fordi return må være sist i en metode og scriptet dreper prosessen så den kjører aldri message send....
 
         elif command.startswith("base64"):
-            await message.channel.send(mtd.base64(message.content[6:].strip()))
+            await message.channel.send(message, mtd.base64(message.content[6:].strip()))
 
         elif "ept" in message.content.lower():
-            await message.channel.send(mtd.ept())
+            await message.channel.send(mtd.ept(message))
 
-        elif "sem_goon" in message.content.lower():
+        elif "sem_goon" in message.content.lower(message):
+            mtd.validateCmd(message)
             await message.channel.send("sem_init()")
             await message.channel.send("sem_wait()")
             await message.channel.send("sem_post()")
             await message.channel.send("💦💦💦")
 
         elif "huzz" in message.content.lower():
+            mtd.validateCmd(message)
             await message.channel.send("https://cdn.discordapp.com/attachments/1276515217517318178/1428704557571244092/tenor.gif")
 
         else:
