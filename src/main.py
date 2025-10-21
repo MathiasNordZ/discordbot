@@ -80,6 +80,15 @@ async def on_message(message):
         elif "ept" in message.content.lower():
             await message.channel.send(mtd.ept())
 
+        elif "sem_goon" in message.content.lower():
+            await message.channel.send("sem_init()")
+            await message.channel.send("sem_wait()")
+            await message.channel.send("sem_post()")
+            await message.channel.send("💦💦💦")
+
+        elif "huzz" in message.content.lower():
+            await message.channel.send("https://cdn.discordapp.com/attachments/1276515217517318178/1428704557571244092/tenor.gif")
+
     # Standalone keyword checks
     if "keystrokers" in message.content.lower():
         await message.add_reaction("🔑")
