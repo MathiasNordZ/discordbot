@@ -25,11 +25,9 @@ def biletter():
 
 def updateBot():
     subprocess.run(["./roll-out.sh"])
-    return "Updating bot..."
 
 def testBot():
     subprocess.run(["./testing.sh"])
-    return "Updating bot to test suite..."
 
 def base64(content):
     message_bytes = base64.b64decode(content)

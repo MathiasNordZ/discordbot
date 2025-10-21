@@ -67,10 +67,12 @@ async def on_message(message):
                 await message.channel.send("❌ I'm not in a voice channel.")
 
         elif "update bot" in command:
-            await message.channel.send(mtd.updateBot())
+            await message.channel.send("Updating bot...")
+            mtd.updateBot() #Må kalles her fordi return må være sist i en metode og scriptet dreper prosessen så den kjører aldri message send....
 
         elif "test bot" in command:
-            await message.channel.send(mtd.testBot())
+            await message.channel.send("Updating bot to test suite...")
+            mtd.testBot() #Må kalles her fordi return må være sist i en metode og scriptet dreper prosessen så den kjører aldri message send....
 
         elif command.startswith("base64"):
             await message.channel.send(mtd.base64(message.content[6:].strip()))
