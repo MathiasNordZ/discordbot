@@ -92,6 +92,8 @@ async def on_message(message):
         elif "huzz" in message.content.lower():
             await message.channel.send("https://cdn.discordapp.com/attachments/1276515217517318178/1428704557571244092/tenor.gif")
 
+        else:
+            await message.add_reaction(":minusrep:")
     # Standalone keyword checks
     if "keystrokers" in message.content.lower():
         await message.add_reaction("🔑")
