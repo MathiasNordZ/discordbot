@@ -94,10 +94,8 @@ async def on_message(message):
 
         else:
             emoji = discord.utils.get(message.guild.emojis, name="minusrep")
-            if emoji:
-                await message.add_reaction(emoji)
-            else:
-                await message.channel.send("⚠️ Couldn't find the :minusrep: emoji!")
+            await message.add_reaction(emoji)
+
     # Standalone keyword checks
     if "keystrokers" in message.content.lower():
         await message.add_reaction("🔑")
