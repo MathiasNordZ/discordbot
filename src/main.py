@@ -32,7 +32,7 @@ async def on_ready():
     channel = client.get_channel(1427570847241207910)  # replace with your channel id
     if channel:
         await channel.send('Bot is now online!')
-    activity = discord.Game(name="Stroking...")
+    activity = discord.Game(name=mtd.eptShort())
     await client.change_presence(activity=activity)
 
 

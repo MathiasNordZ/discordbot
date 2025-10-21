@@ -41,3 +41,10 @@ def ept():
     hours = seconds // 3600
     minutes = (seconds % 3600) // 60
     return (f"Time until EPT CTF: {days} days, {hours} hours, and {minutes} minutes.")
+
+def eptShort():
+    event_date = td.datetime(2025, 11, 8, 10)
+    now = td.datetime.now()
+    delta = event_date - now
+    days, seconds = delta.days, delta.seconds
+    return (f"EPT in: {days} days")
