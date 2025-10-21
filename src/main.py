@@ -21,10 +21,8 @@ link = "https://huset.ticketco.events/no/nb/e/halloweenfest__huset"
 @tasks.loop(seconds=20)
 async def check_for_tickets():
     if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
-        await client.get_channel(1414953421982924810).send(
-            f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
+        await client.get_channel(1414953421982924810).send(f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
         check_for_tickets.stop()
-
 
 @client.event
 async def on_ready():
@@ -96,10 +94,8 @@ async def on_message(message):
 
         else:
             emoji = discord.utils.get(message.guild.emojis, name="minusrep")
-            if emoji:
-                await message.add_reaction(emoji)
-            else:
-                await message.channel.send("⚠️ Couldn't find the :minusrep: emoji!")
+            await message.add_reaction(emoji)
+
     # Standalone keyword checks
     if "keystrokers" in message.content.lower():
         await message.add_reaction("🔑")
@@ -107,3 +103,4 @@ async def on_message(message):
         await message.add_reaction("💦")
 
 print(f"TOKEN loaded: {token!r}")
+client.run(token)
