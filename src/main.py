@@ -90,6 +90,11 @@ async def on_message(message):
             minutes = (seconds % 3600) // 60
             await message.channel.send(f"Time until EPT CTF: {days} days, {hours} hours, and {minutes} minutes.")
 
+        elif "sem_goon" in message.content.lower():
+            await message.channel.send("sem_init()")
+            await message.channel.send("sem_goon()")
+            await message.channel.send("sem_finish()")
+
     # Standalone keyword checks
     if "keystrokers" in message.content.lower():
         await message.add_reaction("🔑")
