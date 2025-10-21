@@ -82,7 +82,7 @@ async def on_message(message):
             await message.channel.send(f"Decoded base64: {message_bytes.decode('utf-8', errors='ignore')}")
 
         elif "ept" in message.content.lower():
-            event_date = td.datetime(2025, 11, 8)
+            event_date = td.datetime(2025, 11, 8, 10)
             now = td.datetime.now()
             delta = event_date - now
             days, seconds = delta.days, delta.seconds
