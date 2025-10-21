@@ -89,6 +89,8 @@ async def on_message(message):
             await message.channel.send("sem_wait()")
             await message.channel.send("sem_post()")
             await message.channel.send("💦💦💦")
+            emoji = discord.utils.get(message.guild.emojis, name="plussrep")
+            await message.add_reaction(emoji)
 
         elif "huzz" in message.content.lower():
             mtd.validateCmd(message)
