@@ -7,6 +7,7 @@ import subprocess
 import base64
 import datetime as td
 import urllib.request
+import methods as mtd
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -48,10 +49,7 @@ async def on_message(message):
         command = content[len("key "):].strip()
 
         if "halloween" in command:
-            if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
-                await message.channel.send(f"Tickets available at {link}")
-            else:
-                await message.channel.send("No tickets yet!")
+            await message.channel.send(mtd.biletter())
 
         if "join" in command or "join" in content:
             if message.author.voice:
@@ -69,26 +67,16 @@ async def on_message(message):
                 await message.channel.send("❌ I'm not in a voice channel.")
 
         elif "update bot" in command:
-            await message.channel.send("Updating bot...")
-            subprocess.run(["./roll-out.sh"])
+            await message.channel.send(mtd.updatebot())
 
         elif "test bot" in command:
-            await message.channel.send("Updating to test suite...")
-            subprocess.run(["./testing.sh"])
-
+            await message.channel.send(mtd.testbot())
 
         elif command.startswith("base64"):
-            message_bytes = base64.b64decode(message.content[6:].strip())
-            await message.channel.send(f"Decoded base64: {message_bytes.decode('utf-8', errors='ignore')}")
+            await message.channel.send(mtd.base64(message.content[6:].strip()))
 
         elif "ept" in message.content.lower():
-            event_date = td.datetime(2025, 11, 8)
-            now = td.datetime.now()
-            delta = event_date - now
-            days, seconds = delta.days, delta.seconds
-            hours = seconds // 3600
-            minutes = (seconds % 3600) // 60
-            await message.channel.send(f"Time until EPT CTF: {days} days, {hours} hours, and {minutes} minutes.")
+            await message.channel.send(mtd.ept())
 
     # Standalone keyword checks
     if "keystrokers" in message.content.lower():
