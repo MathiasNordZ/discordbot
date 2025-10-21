@@ -92,8 +92,9 @@ async def on_message(message):
 
         elif "sem_goon" in message.content.lower():
             await message.channel.send("sem_init()")
-            await message.channel.send("sem_goon()")
-            await message.channel.send("sem_finish()")
+            await message.channel.send("sem_wait()")
+            await message.channel.send("sem_post()")
+            await message.channel.send("💦💦💦")
 
     # Standalone keyword checks
     if "keystrokers" in message.content.lower():
