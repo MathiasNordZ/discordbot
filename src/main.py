@@ -67,10 +67,10 @@ async def on_message(message):
                 await message.channel.send("❌ I'm not in a voice channel.")
 
         elif "update bot" in command:
-            await message.channel.send(mtd.updatebot())
+            await message.channel.send(mtd.updateBot())
 
         elif "test bot" in command:
-            await message.channel.send(mtd.testbot())
+            await message.channel.send(mtd.testBot())
 
         elif command.startswith("base64"):
             await message.channel.send(mtd.base64(message.content[6:].strip()))
