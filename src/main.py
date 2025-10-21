@@ -18,9 +18,9 @@ client = discord.Client(intents=intents)
 
 @client.event
 async def check_for_tickets():
-    link = "https://huset.ticketco.events/no/nb/e/halloweenfest__huset"
+    link = "https://cinematekettrondheim.ticketco.events/no/nb/e/the_paradine_case2"
     if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
-        await client.get_channel(1427570847241207910).send(f"@everyone Billetter for halloween fest er ikke ute enda nå ute {link}")
+        await client.get_channel(1427570847241207910).send(f"@everyone Billetter for The Paradine Case fest er nå ute {link}")
 
 @client.event
 async def on_ready():
