@@ -1,9 +1,12 @@
 import os
+import urllib.request
+
 from dotenv import load_dotenv
 import discord
 import subprocess
 import base64
 import datetime as td
+import urllib.request
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -12,6 +15,12 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = discord.Client(intents=intents)
+
+@client.event
+async def check_for_tickets():
+    link = "https://huset.ticketco.events/no/nb/e/halloweenfest__huset"
+    if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
+        await client.get_channel(1427570847241207910).send(f"@everyone Billetter for halloween fest er ikke ute enda nå ute {link}")
 
 @client.event
 async def on_ready():
@@ -25,6 +34,11 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    tickets_for_sale = False
+    if not tickets_for_sale:
+        await check_for_tickets()
+        tickets_for_sale = True
+
     if message.author == client.user:
         return
 
