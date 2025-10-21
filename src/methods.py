@@ -22,7 +22,7 @@ def help():
     return helpText
 
 
-def biletter():
+def biletter(link):
     if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
         return(f"Tickets available at {link}")
     else:

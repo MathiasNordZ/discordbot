@@ -52,7 +52,7 @@ async def on_message(message):
             await message.channel.send(mtd.help())
 
         if "halloween" in command:
-            await message.channel.send(mtd.biletter())
+            await message.channel.send(mtd.biletter(link))
 
         if "join" in command or "join" in content:
             if message.author.voice:
