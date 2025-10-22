@@ -17,10 +17,14 @@ intents.message_content = True
 
 client = discord.Client(intents=intents)
 
+def _fetch_html_str(link):
+    data = urllib.request.urlopen(link).read()
+    return data.decode("utf-8", errors="ignore")
+
 def check_for_tickets_when_sold_out(link):
-    html = urllib.request.urlopen(link).read()
+    html = _fetch_html_str(link)
     parts = re.split(r'(?=<div id="item_type_\d+")', html)
-    if b"data-available-amount='{0}'" not in parts[2]:
+    if "data-available-amount='{0}'" not in parts[2]:
         return True
     else:
         return False
