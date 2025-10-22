@@ -8,7 +8,6 @@ import base64
 import datetime as td
 import urllib.request
 import methods as mtd
-from src.methods import check_for_tickets_when_sold_out
 
 load_dotenv()
 token = os.getenv("TOKEN")
