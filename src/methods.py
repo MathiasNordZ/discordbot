@@ -25,8 +25,6 @@ def _fetch_html_str(link):
     data = urllib.request.urlopen(link).read()
     return data.decode("utf-8", errors="ignore")
 
-
-def biletter(link):
 def check_for_tickets_when_sold_out(link):
     html = _fetch_html_str(link)
     parts = re.split(r'(?=<div id="item_type_\d+")', html)
