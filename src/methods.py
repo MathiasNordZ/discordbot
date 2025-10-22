@@ -43,7 +43,7 @@ def testBot():
     subprocess.run(["./testing.sh"])
 
 def base64(content: str) -> str:
-    message_bytes = b64decode(content) #base64.b64decode(content)
+    message_bytes = base64.b64decode(content)
     return (f"Decoded base64: {message_bytes.decode('utf-8', errors='ignore')}")
 
 def ept():
