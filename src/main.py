@@ -27,8 +27,8 @@ async def check_for_tickets():
 @client.event
 async def on_ready():
     print(f'Logged in as {client.user}')
-    if not check_for_tickets.is_running():
-        check_for_tickets.start()
+    #if not check_for_tickets.is_running():
+        #check_for_tickets.start()
     channel = client.get_channel(1427570847241207910)  # replace with your channel id
     if channel:
         await channel.send('Bot is now online!')
