@@ -23,11 +23,11 @@ link = "https://huset.ticketco.events/no/nb/e/halloweenfest__huset"
 If tickets are listed but sold out
 """
 @tasks.loop(seconds=30)
-async def print_ticket_message():
+async def message_if_tickets():
     if mtd.check_for_tickets_when_sold_out():
         await client.get_channel(1414953421982924810).send(
             f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
-        print_ticket_message.stop()
+        message_if_tickets.stop()
 
 """
 If the tickets are not listed on the website

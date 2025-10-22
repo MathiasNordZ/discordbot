@@ -16,14 +16,16 @@ intents.message_content = True
 
 client = discord.Client(intents=intents)
 
+
 link = "https://huset.ticketco.events/no/nb/e/halloweenfest__huset"
 ticket_id_type_1 = "item_type_24484430"
 ticket_id_type_2 = "item_type_24484431"
 ticket_type_id_3 = "item_type_24357868"
 def check_for_tickets_when_sold_out():
     html = urllib.request.urlopen(link).read()
-    tickets = html.split(ticket_id_type_1, ticket_id_type_2, ticket_type_id_3)
-    if b"data-available-amount='{0}'" not in tickets[1] or tickets[2] or tickets[3]:
+    tickets = html.split(ticket_id_type_1, ticket_id_type_2)
+    tickets2 = html.split(ticket_type_id_3)
+    if b"data-available-amount='{0}'" not in tickets[1] or tickets[2] or tickets2[1]:
         return True
     else:
         return False
