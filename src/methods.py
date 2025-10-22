@@ -24,7 +24,7 @@ def _fetch_html_str(link):
 def check_for_tickets_when_sold_out(link):
     html = _fetch_html_str(link)
     parts = re.split(r'(?=<div id="item_type_\d+")', html)
-    if "data-available-amount='{0}'" not in parts[2]:
+    if "data-available-amount='{0}'" not in parts[1] or "data-available-amount='{0}'" not in parts[3]:
         return True
     else:
         return False

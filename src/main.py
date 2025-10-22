@@ -41,8 +41,8 @@ async def check_for_tickets():
 @client.event
 async def on_ready():
     print(f'Logged in as {client.user}')
-    #if not check_for_tickets.is_running():
-        #print_ticket_message.start()
+    #if not message_if_tickets.is_running():
+        #message_if_tickets.start()
     channel = client.get_channel(1427570847241207910)  # replace with your channel id
     if channel:
         await channel.send('Bot is now online!')
@@ -64,10 +64,9 @@ async def on_message(message):
 
         if "halloween" in command:
             if mtd.check_for_tickets_when_sold_out(link) is True:
-                await message.channel.send(f"Tickets (not yet) available at {link}")
+                await message.channel.send(f"Tickets available at {link}")
             else:
                 await message.channel.send("No tickets yet!")
-            #await message.channel.send(mtd.biletter(link))
 
         if "join" in command or "join" in content:
             if message.author.voice:
