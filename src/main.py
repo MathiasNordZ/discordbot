@@ -63,7 +63,7 @@ async def on_message(message):
         command = content[len("key "):].strip()
 
         if "halloween" in command:
-            if mtd.check_for_tickets_when_sold_out():
+            if mtd.check_for_tickets_when_sold_out() is True:
                 await message.channel.send(f"Tickets (not yet) available at {link}")
             else:
                 await message.channel.send("No tickets yet!")
