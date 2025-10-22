@@ -42,7 +42,7 @@ def updateBot():
 def testBot():
     subprocess.run(["./testing.sh"])
 
-def base64(content: str) -> str:
+def decode_base64(content: str) -> str:
     message_bytes = base64.b64decode(content)
     return (f"Decoded base64: {message_bytes.decode('utf-8', errors='ignore')}")
 
