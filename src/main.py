@@ -71,7 +71,7 @@ async def on_message(message):
             else:
                 await message.channel.send("No tickets yet!")
 
-        if "join" in command or "join" in content:
+        elif "join" in command or "join" in content:
             if message.author.voice:
                 channel = message.author.voice.channel
                 await channel.connect()
