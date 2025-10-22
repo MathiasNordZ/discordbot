@@ -1,4 +1,5 @@
 import os
+import re
 
 from discord.ext import tasks
 from dotenv import load_dotenv
@@ -20,7 +21,19 @@ def help():
     helpText = ("Use key as keyword to get started!   eks: key ept\n\n\nept: Shows time until the EPT CTF\n\nbase64: Use base64 xxxx== to decode base64 directly\n \nsem_goon: Shows the sem goon pipeline\n\nhuzz: Shows the huzz\n\n\nupdate/test bot pulls most recent version in either main or testing branch")
 
     return helpText
+def _fetch_html_str(link):
+    data = urllib.request.urlopen(link).read()
+    return data.decode("utf-8", errors="ignore")
 
+
+def biletter(link):
+def check_for_tickets_when_sold_out(link):
+    html = _fetch_html_str(link)
+    parts = re.split(r'(?=<div id="item_type_\d+")', html)
+    if "data-available-amount='0'" not in parts[1] or "data-available-amount='0'" not in parts[3]:
+        return True
+    else:
+        return False
 
 def biletter(link):
     if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():

@@ -18,7 +18,21 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 link = "https://huset.ticketco.events/no/nb/e/halloweenfest__huset"
-@tasks.loop(seconds=20)
+
+"""
+If tickets are listed but sold out
+"""
+@tasks.loop(seconds=30)
+async def message_if_tickets():
+    if mtd.check_for_tickets_when_sold_out(link) is True:
+        await client.get_channel(1414953421982924810).send(
+            f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
+        message_if_tickets.stop()
+
+"""
+If the tickets are not listed on the website
+"""
+@tasks.loop(seconds=30)
 async def check_for_tickets():
     if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
         await client.get_channel(1414953421982924810).send(f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
@@ -27,8 +41,8 @@ async def check_for_tickets():
 @client.event
 async def on_ready():
     print(f'Logged in as {client.user}')
-    #if not check_for_tickets.is_running():
-        #check_for_tickets.start()
+    if not message_if_tickets.is_running():
+        message_if_tickets.start()
     channel = client.get_channel(1427570847241207910)  # replace with your channel id
     if channel:
         await channel.send('Bot is now online!')
@@ -52,9 +66,12 @@ async def on_message(message):
             await message.channel.send(mtd.help())
 
         elif "halloween" in command:
-            await message.channel.send(mtd.biletter(link))
+            if mtd.check_for_tickets_when_sold_out(link) is True:
+                await message.channel.send(f"Tickets available at {link}")
+            else:
+                await message.channel.send("No tickets yet!")
 
-        elif "join" in command or "join" in content:
+        if "join" in command or "join" in content:
             if message.author.voice:
                 channel = message.author.voice.channel
                 await channel.connect()
