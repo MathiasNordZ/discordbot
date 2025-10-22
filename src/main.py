@@ -92,7 +92,7 @@ async def on_message(message):
             mtd.testBot() #Må kalles her fordi return må være sist i en metode og scriptet dreper prosessen så den kjører aldri message send....
 
         elif command.startswith("base64"):
-            await message.channel.send(mtd.base64(message.content[10:].strip()))
+            await message.channel.send(mtd.base64(message.content[6:].strip()))
 
         elif "ept" in message.content.lower():
             await message.channel.send(mtd.ept())
