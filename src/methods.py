@@ -17,7 +17,15 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 
-def biletter():
+def check_for_tickets_when_sold_out(link, ticket_id_type_1, ticket_id_type_2, ticket_type_id_3):
+    html = urllib.request.urlopen(link).read()
+    tickets = html.split(ticket_id_type_1, ticket_id_type_2, ticket_type_id_3)
+    if b"data-available-amount='{0}'" not in tickets[1] or tickets[3]:
+        return True
+    else:
+        return False
+
+def biletter(link):
     if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
         return(f"Tickets available at {link}")
     else:

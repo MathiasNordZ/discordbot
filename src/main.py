@@ -8,6 +8,7 @@ import base64
 import datetime as td
 import urllib.request
 import methods as mtd
+from src.methods import check_for_tickets_when_sold_out
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -18,7 +19,20 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 link = "https://huset.ticketco.events/no/nb/e/halloweenfest__huset"
-@tasks.loop(seconds=20)
+ticket_id_type_1 = "item_type_24484430"
+ticket_id_type_2 = "item_type_24484431"
+ticket_type_id_3 = "item_type_24357868"
+
+@tasks.loop(seconds=30)
+async def print_ticket_message():
+    if mtd.check_for_tickets_when_sold_out(link, ticket_id_type_1, ticket_id_type_2, ticket_type_id_3):
+        await client.get_channel(1414953421982924810).send(
+            f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
+
+"""
+If the tickets are not listed on the website
+"""
+@tasks.loop(seconds=30)
 async def check_for_tickets():
     if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
         await client.get_channel(1414953421982924810).send(f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
@@ -28,7 +42,7 @@ async def check_for_tickets():
 async def on_ready():
     print(f'Logged in as {client.user}')
     if not check_for_tickets.is_running():
-        check_for_tickets.start()
+        print_ticket_message.start()
     channel = client.get_channel(1427570847241207910)  # replace with your channel id
     if channel:
         await channel.send('Bot is now online!')
@@ -49,7 +63,11 @@ async def on_message(message):
         command = content[len("key "):].strip()
 
         if "halloween" in command:
-            await message.channel.send(mtd.biletter())
+            if mtd.check_for_tickets_when_sold_out(link, ticket_id_type_1, ticket_id_type_2, ticket_type_id_3):
+                await message.channel.send(f"Tickets available at {link}")
+            else:
+                await message.channel.send("No tickets yet!")
+            #await message.channel.send(mtd.biletter(link))
 
         if "join" in command or "join" in content:
             if message.author.voice:
