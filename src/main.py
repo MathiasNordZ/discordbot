@@ -24,7 +24,7 @@ If tickets are listed but sold out
 """
 @tasks.loop(seconds=30)
 async def message_if_tickets():
-    if mtd.check_for_tickets_when_sold_out():
+    if mtd.check_for_tickets_when_sold_out() is True:
         await client.get_channel(1414953421982924810).send(
             f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
         message_if_tickets.stop()
