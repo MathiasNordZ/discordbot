@@ -67,12 +67,20 @@ def eptShort():
     return (f"EPT in: {days} days")
 
 
-def pRep(user):
-    emoji = discord.utils.get(message.guild.emojis, name="plusrep")
+def pRep(message, user):
+    emoji = discord.utils.get(message.guild.emojis, name="plussrep")
+    if emoji is None:
+        emoji = "👍"
     if user in ["Mathias", "Simen", "Odin", "Frikk", "Nick", "Joakim"]:
-        return ("plus rep to " + user + "!" + emoji)
+        return f"Plus rep to {user}! {emoji}"
+    else:
+        return f"User '{user}' not found! {emoji}"
 
-def mRep(user):
+def mRep(message, user):
     emoji = discord.utils.get(message.guild.emojis, name="minusrep")
+    if emoji is None:
+        emoji = "👎"
     if user in ["Mathias", "Simen", "Odin", "Frikk", "Nick", "Joakim"]:
-        return ("mine rep to " + user + "!"+ emoji)
+        return f"Minus rep to {user}! {emoji}"
+    else:
+        return f"User '{user}' not found! {emoji}"
