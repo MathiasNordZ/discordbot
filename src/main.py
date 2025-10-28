@@ -118,7 +118,8 @@ async def on_message(message):
             user = message.content[9:].strip()
             await message.channel.send(mtd.mRep(message, user))
 
-
+        elif "repboard" in command:
+            await message.channel.send(mtd.getLeaderboard())
         else:
             emoji = discord.utils.get(message.guild.emojis, name="minusrep")
             await message.add_reaction(emoji)
