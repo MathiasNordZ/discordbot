@@ -1,6 +1,7 @@
 import os
 import re
 
+from discord import message
 from discord.ext import tasks
 from dotenv import load_dotenv
 import discord
@@ -64,3 +65,22 @@ def eptShort():
     delta = event_date - now
     days, seconds = delta.days, delta.seconds
     return (f"EPT in: {days} days")
+
+
+def pRep(message, user):
+    emoji = discord.utils.get(message.guild.emojis, name="plussrep")
+    if emoji is None:
+        emoji = "👍"
+    if user in ["Mathias", "Simen", "Odin", "Frikk", "Nick", "Joakim"]:
+        return f"Plus rep to {user}! {emoji}"
+    else:
+        return f"User '{user}' not found! {emoji}"
+
+def mRep(message, user):
+    emoji = discord.utils.get(message.guild.emojis, name="minusrep")
+    if emoji is None:
+        emoji = "👎"
+    if user in ["Mathias", "Simen", "Odin", "Frikk", "Nick", "Joakim"]:
+        return f"Minus rep to {user}! {emoji}"
+    else:
+        return f"User '{user}' not found! {emoji}"

@@ -109,6 +109,16 @@ async def on_message(message):
         elif "huzz" in message.content.lower():
             await message.channel.send("https://cdn.discordapp.com/attachments/1276515217517318178/1428704557571244092/tenor.gif")
 
+
+        elif command.startswith("+rep "):
+            user = message.content[9:].strip()
+            await message.channel.send(mtd.pRep(message, user))
+
+        elif command.startswith("-rep "):
+            user = message.content[9:].strip()
+            await message.channel.send(mtd.mRep(message, user))
+
+
         else:
             emoji = discord.utils.get(message.guild.emojis, name="minusrep")
             await message.add_reaction(emoji)
