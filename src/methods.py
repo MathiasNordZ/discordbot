@@ -1,6 +1,5 @@
 import os
 import re
-from base64 import b64decode
 
 from discord.ext import tasks
 from dotenv import load_dotenv
@@ -18,6 +17,10 @@ intents.message_content = True
 
 client = discord.Client(intents=intents)
 
+def help():
+    helpText = ("Use key as keyword to get started!   eks: key ept\n\n\nept: Shows time until the EPT CTF\n\nbase64: Use base64 xxxx== to decode base64 directly\n \nsem_goon: Shows the sem goon pipeline\n\nhuzz: Shows the huzz\n\n\nupdate/test bot pulls most recent version in either main or testing branch")
+
+    return helpText
 def _fetch_html_str(link):
     data = urllib.request.urlopen(link).read()
     return data.decode("utf-8", errors="ignore")
@@ -42,15 +45,22 @@ def updateBot():
 def testBot():
     subprocess.run(["./testing.sh"])
 
-def decode_base64(content: str) -> str:
+def b64(content):
     message_bytes = base64.b64decode(content)
     return (f"Decoded base64: {message_bytes.decode('utf-8', errors='ignore')}")
 
 def ept():
-    event_date = td.datetime(2025, 11, 8, 10)
+    event_date = td.datetime(2025, 11, 8, 9)
     now = td.datetime.now()
     delta = event_date - now
     days, seconds = delta.days, delta.seconds
     hours = seconds // 3600
     minutes = (seconds % 3600) // 60
     return (f"Time until EPT CTF: {days} days, {hours} hours, and {minutes} minutes.")
+
+def eptShort():
+    event_date = td.datetime(2025, 11, 8, 9)
+    now = td.datetime.now()
+    delta = event_date - now
+    days, seconds = delta.days, delta.seconds
+    return (f"EPT in: {days} days")
