@@ -50,7 +50,7 @@ def b64(content):
     return (f"Decoded base64: {message_bytes.decode('utf-8', errors='ignore')}")
 
 def ept():
-    event_date = td.datetime(2025, 11, 8, 10)
+    event_date = td.datetime(2025, 11, 8, 9)
     now = td.datetime.now()
     delta = event_date - now
     days, seconds = delta.days, delta.seconds
@@ -59,7 +59,7 @@ def ept():
     return (f"Time until EPT CTF: {days} days, {hours} hours, and {minutes} minutes.")
 
 def eptShort():
-    event_date = td.datetime(2025, 11, 8, 10)
+    event_date = td.datetime(2025, 11, 8, 9)
     now = td.datetime.now()
     delta = event_date - now
     days, seconds = delta.days, delta.seconds
