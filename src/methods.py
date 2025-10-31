@@ -165,25 +165,15 @@ def getLeaderboard(limit=10):
 
 
 
-async def schedule_ctf_reminder(channel_id, event_time, reminder_text="🚩 The CTF is starting now!"):
-    """Schedules a message to be sent at the given event_time."""
+async def schedule_ctf_reminder(client, channel_id, event_time):
     await client.wait_until_ready()  # Wait until the bot is fully started
     channel = client.get_channel(channel_id)
-
-    if not channel:
-        print(f"⚠️ Channel with ID {channel_id} not found.")
+    if channel is None:
+        print(f"Warning: Channel with ID {channel_id} not found.")
         return
 
-    now = td.datetime.now()
-    delay = (event_time - now).total_seconds()
+    delay = (event_time - td.datetime.now()).total_seconds()
+    if delay > 0:
+        await asyncio.sleep(delay)
 
-    if delay <= 0:
-        # If event_time has already passed, send immediately
-        await channel.send(reminder_text)
-        return
-
-    print(f"⏳ Reminder scheduled in {delay} seconds.")
-    await asyncio.sleep(delay)
-
-    await channel.send(reminder_text)
-    print("@everyone v1t Starting now!")
+    await channel.send("@everyone v1T CTF Starter nå!!")

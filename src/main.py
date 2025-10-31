@@ -49,11 +49,13 @@ async def on_ready():
     activity = discord.Game(name=mtd.eptShort())
     await client.change_presence(activity=activity)
 
-    event_time = td.datetime(2025, 10, 31, 13, 0)
+    # Ensure the bot is fully ready before scheduling the reminder
+    event_time = td.datetime(2025, 10, 31, 14, 0)
     channel_id = 1414953421982924810  # Replace with your channel's ID
 
-    # Schedule the reminder
-    client.loop.create_task(mtd.schedule_ctf_reminder(channel_id, event_time))
+    # Pass the client instance to the method
+    await mtd.schedule_ctf_reminder(client, channel_id, event_time)
+
 
 
 @client.event
