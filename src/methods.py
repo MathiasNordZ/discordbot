@@ -99,7 +99,7 @@ def save_reps(data):
 def pRep(message, user):
     if user == message.author:
         return "❌ You cannot give reputation to yourself!"
-    elif user in ["Simen", "Frikk", "Mathias", "Odin", "Joakim", "Nick"]:
+    elif user in ["Simen", "Frikk", "Mathias", "Odin", "Joakim", "Nick", "Aprit"]:
         """Give +1 reputation to a user."""
         emoji = discord.utils.get(message.guild.emojis, name="plusrep")
         if emoji is None:
@@ -115,7 +115,7 @@ def pRep(message, user):
 
         return f"✅ Gave +1 rep to **{user_key}**! Total: **{reps[user_key]}** {emoji}"
     else:
-        return "❌ You can only give reputation to Simen, Frikk, Mathias, Odin, Joakim, or Nick!"
+        return "❌ You can only give reputation to Simen, Frikk, Mathias, Odin, Joakim, Arpit, or Nick!"
 
 
 def mRep(message, user):
