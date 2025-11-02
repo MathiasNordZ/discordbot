@@ -50,11 +50,13 @@ async def on_ready():
     await client.change_presence(activity=activity)
 
     # Ensure the bot is fully ready before scheduling the reminder
-    event_time = td.datetime(2025, 10, 31, 14, 0)
+    ept_time = td.datetime(2025, 11, 8, 9)
+    ept_reminder_time = td.datetime(2025, 11, 7, 9)
     channel_id = 1414953421982924810  # Replace with your channel's ID
 
     # Pass the client instance to the method
-    await mtd.schedule_ctf_reminder(client, channel_id, event_time)
+    await mtd.schedule_ctf_reminder(client, channel_id, ept_time)
+    await mtd.schedule_ctf_reminder(client, channel_id, ept_reminder_time)
 
 
 
