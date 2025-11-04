@@ -46,12 +46,6 @@ async def on_message(message):
         if "help" in command:
             await message.channel.send(mtd.help())
 
-        elif "halloween" in command:
-            if mtd.check_for_tickets_when_sold_out(link) is True:
-                await message.channel.send(f"Tickets available at {link}")
-            else:
-                await message.channel.send("No tickets yet!")
-
         elif "join" in command or "join" in content:
             if message.author.voice:
                 channel = message.author.voice.channel
