@@ -1,12 +1,8 @@
 import os
 
-from discord.ext import tasks
 from dotenv import load_dotenv
 import discord
-import subprocess
-import base64
 import datetime as td
-import urllib.request
 import methods as mtd
 
 load_dotenv()
@@ -17,32 +13,9 @@ intents.message_content = True
 
 client = discord.Client(intents=intents)
 
-link = "https://huset.ticketco.events/no/nb/e/halloweenfest__huset"
-
-"""
-If tickets are listed but sold out
-"""
-@tasks.loop(seconds=30)
-async def message_if_tickets():
-    if mtd.check_for_tickets_when_sold_out(link) is True:
-        await client.get_channel(1414953421982924810).send(
-            f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
-        message_if_tickets.stop()
-
-"""
-If the tickets are not listed on the website
-"""
-@tasks.loop(seconds=30)
-async def check_for_tickets():
-    if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
-        await client.get_channel(1414953421982924810).send(f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
-        check_for_tickets.stop()
-
 @client.event
 async def on_ready():
     print(f'Logged in as {client.user}')
-    if not message_if_tickets.is_running():
-        message_if_tickets.start()
     channel = client.get_channel(1427570847241207910)  # replace with your channel id
     if channel:
         await channel.send('Bot is now online!')
@@ -57,8 +30,6 @@ async def on_ready():
     # Pass the client instance to the method
     await mtd.schedule_ctf_reminder(client, channel_id, ept_time)
     await mtd.schedule_ctf_reminder(client, channel_id, ept_reminder_time)
-
-
 
 @client.event
 async def on_message(message):
