@@ -1,14 +1,13 @@
 import os
 import re
-
-from discord import message
-from discord.ext import tasks
+import json
 from dotenv import load_dotenv
 import discord
 import subprocess
 import base64
 import datetime as td
 import urllib.request
+import asyncio
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -17,6 +16,9 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = discord.Client(intents=intents)
+
+FILE_PATH = "data/rep.json"
+
 
 def help():
     helpText = ("Use key as keyword to get started!   eks: key ept\n\n\nept: Shows time until the EPT CTF\n\nbase64: Use base64 xxxx== to decode base64 directly\n \nsem_goon: Shows the sem goon pipeline\n\nhuzz: Shows the huzz\n\n\nupdate/test bot pulls most recent version in either main or testing branch")
@@ -67,20 +69,111 @@ def eptShort():
     return (f"EPT in: {days} days")
 
 
+# -------------------------------
+# JSON Handling
+# -------------------------------
+
+def load_reps():
+    """Load reputation data from JSON file."""
+    if not os.path.exists(FILE_PATH):
+        # Make sure the folder exists
+        os.makedirs(os.path.dirname(FILE_PATH), exist_ok=True)
+        return {}
+
+    with open(FILE_PATH, "r") as f:
+        try:
+            return json.load(f)
+        except json.JSONDecodeError:
+            return {}  # In case the file is empty or corrupted
+
+
+def save_reps(data):
+    """Save reputation data to JSON file."""
+    with open(FILE_PATH, "w") as f:
+        json.dump(data, f, indent=4)
+
+
+# -------------------------------
+# Reputation Commands
+# -------------------------------
+
 def pRep(message, user):
-    emoji = discord.utils.get(message.guild.emojis, name="plussrep")
-    if emoji is None:
-        emoji = "👍"
-    if user in ["Mathias", "Simen", "Odin", "Frikk", "Nick", "Joakim"]:
-        return f"Plus rep to {user}! {emoji}"
+    if user == message.author:
+        return "❌ You cannot give reputation to yourself!"
+    elif user in ["Simen", "Frikk", "Mathias", "Odin", "Joakim", "Nick", "Arpit"]:
+        """Give +1 reputation to a user."""
+        emoji = discord.utils.get(message.guild.emojis, name="plusrep")
+        if emoji is None:
+            emoji = "👍"
+
+        reps = load_reps()
+
+        # Update user’s score (case-insensitive)
+        user_key = user.capitalize()
+        reps[user_key] = reps.get(user_key, 0) + 1
+
+        save_reps(reps)
+
+        return f"✅ Gave +1 rep to **{user_key}**! Total: **{reps[user_key]}** {emoji}"
     else:
-        return f"User '{user}' not found! {emoji}"
+        return "❌ You can only give reputation to Simen, Frikk, Mathias, Odin, Joakim, Arpit, or Nick!"
+
 
 def mRep(message, user):
-    emoji = discord.utils.get(message.guild.emojis, name="minusrep")
-    if emoji is None:
-        emoji = "👎"
-    if user in ["Mathias", "Simen", "Odin", "Frikk", "Nick", "Joakim"]:
-        return f"Minus rep to {user}! {emoji}"
+    if user == message.author:
+        return "❌ You cannot give reputation to yourself!"
+    elif user in ["Simen", "Frikk", "Mathias", "Odin", "Joakim", "Nick"]:
+
+        emoji = discord.utils.get(message.guild.emojis, name="plusrep")
+        if emoji is None:
+            emoji = "👍"
+
+        reps = load_reps()
+
+        # Update user’s score (case-insensitive)
+        user_key = user.capitalize()
+        reps[user_key] = reps.get(user_key, 0) - 1
+
+        save_reps(reps)
+
+        return f"⚠️ Gave -1 rep to **{user_key}**! Total: **{reps[user_key]}** {emoji}"
     else:
-        return f"User '{user}' not found! {emoji}"
+        return "❌ You can only give reputation to Simen, Frikk, Mathias, Odin, Joakim, or Nick!"
+
+
+
+# -------------------------------
+# Utility Command (optional)
+# -------------------------------
+
+def getLeaderboard(limit=10):
+    """Return a formatted string of the top rep users."""
+    reps = load_reps()
+
+    if not reps:
+        return "No reputation data yet!"
+
+    # Sort by score (highest first)
+    sorted_users = sorted(reps.items(), key=lambda x: x[1], reverse=True)
+
+    leaderboard = "**🏆 Reputation Leaderboard 🏆**\n"
+    for i, (user, score) in enumerate(sorted_users[:limit], start=1):
+        leaderboard += f"{i}. **{user}** — {score} points\n"
+
+    return leaderboard
+
+
+
+
+async def schedule_ctf_reminder(client, channel_id, event_time):
+    await client.wait_until_ready()  # Wait until the bot is fully started
+    channel = client.get_channel(channel_id)
+    if channel is None:
+        print(f"Warning: Channel with ID {channel_id} not found.")
+        return
+
+    delay = (event_time - td.datetime.now()).total_seconds()
+    if delay > 0:
+        await asyncio.sleep(delay)
+
+    await channel.send("@everyone v1T CTF Starter nå!!")

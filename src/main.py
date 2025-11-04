@@ -1,12 +1,8 @@
 import os
 
-from discord.ext import tasks
 from dotenv import load_dotenv
 import discord
-import subprocess
-import base64
 import datetime as td
-import urllib.request
 import methods as mtd
 
 load_dotenv()
@@ -17,38 +13,23 @@ intents.message_content = True
 
 client = discord.Client(intents=intents)
 
-link = "https://huset.ticketco.events/no/nb/e/halloweenfest__huset"
-
-"""
-If tickets are listed but sold out
-"""
-@tasks.loop(seconds=30)
-async def message_if_tickets():
-    if mtd.check_for_tickets_when_sold_out(link) is True:
-        await client.get_channel(1414953421982924810).send(
-            f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
-        message_if_tickets.stop()
-
-"""
-If the tickets are not listed on the website
-"""
-@tasks.loop(seconds=30)
-async def check_for_tickets():
-    if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
-        await client.get_channel(1414953421982924810).send(f"@everyone Billetter for HALLOWEENFEST fest er nå ute {link}")
-        check_for_tickets.stop()
-
 @client.event
 async def on_ready():
     print(f'Logged in as {client.user}')
-    if not message_if_tickets.is_running():
-        message_if_tickets.start()
     channel = client.get_channel(1427570847241207910)  # replace with your channel id
     if channel:
         await channel.send('Bot is now online!')
     activity = discord.Game(name=mtd.eptShort())
     await client.change_presence(activity=activity)
 
+    # Ensure the bot is fully ready before scheduling the reminder
+    ept_time = td.datetime(2025, 11, 8, 9)
+    ept_reminder_time = td.datetime(2025, 11, 7, 9)
+    channel_id = 1414953421982924810  # Replace with your channel's ID
+
+    # Pass the client instance to the method
+    await mtd.schedule_ctf_reminder(client, channel_id, ept_time)
+    await mtd.schedule_ctf_reminder(client, channel_id, ept_reminder_time)
 
 @client.event
 async def on_message(message):
@@ -64,12 +45,6 @@ async def on_message(message):
 
         if "help" in command:
             await message.channel.send(mtd.help())
-
-        elif "halloween" in command:
-            if mtd.check_for_tickets_when_sold_out(link) is True:
-                await message.channel.send(f"Tickets available at {link}")
-            else:
-                await message.channel.send("No tickets yet!")
 
         elif "join" in command or "join" in content:
             if message.author.voice:
@@ -118,7 +93,8 @@ async def on_message(message):
             user = message.content[9:].strip()
             await message.channel.send(mtd.mRep(message, user))
 
-
+        elif "repboard" in command:
+            await message.channel.send(mtd.getLeaderboard())
         else:
             emoji = discord.utils.get(message.guild.emojis, name="minusrep")
             await message.add_reaction(emoji)
