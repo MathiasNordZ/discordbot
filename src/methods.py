@@ -1,3 +1,4 @@
+# File: src/methods.py
 import os
 import re
 import json
@@ -91,6 +92,32 @@ def save_reps(data):
     """Save reputation data to JSON file."""
     with open(FILE_PATH, "w") as f:
         json.dump(data, f, indent=4)
+
+
+def log_command(command, author):
+    """Append a command usage entry to data/command_log.json."""
+    log_path = "data/command_log.json"
+    os.makedirs(os.path.dirname(log_path), exist_ok=True)
+
+    entry = {
+        "command": command,
+        "user": str(author),
+        "user_id": getattr(author, "id", None),
+        "timestamp": td.datetime.now().isoformat()
+    }
+
+    try:
+        with open(log_path, "r") as f:
+            logs = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        logs = []
+
+    logs.append(entry)
+
+    with open(log_path, "w") as f:
+        json.dump(logs, f, indent=2)
+
+    return entry
 
 
 # -------------------------------
