@@ -1,8 +1,7 @@
 # File: src/main.py
 import os
-
-from dotenv import load_dotenv
 import discord
+from dotenv import load_dotenv
 import datetime as td
 import methods as mtd
 
@@ -41,8 +40,8 @@ async def on_message(message):
     content = raw.lower().strip()
 
     # Trigger: messages starting with "key"
-    if content.startswith("key "):
-        command = content[len("key "):].strip()
+    if content.startswith("exec "):
+        command = content[len("exec "):].strip()
 
         if "help" in command:
             await message.channel.send(mtd.help())
