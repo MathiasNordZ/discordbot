@@ -67,14 +67,14 @@ async def on_message(message):
                 mtd.log_command("join", message.author)
 
                 # Try to play a local wav file after joining
-                wav_path = os.path.join(os.path.dirname(__file__), "sounds/iku.wav")
+                wav_path = os.path.join(os.path.dirname(__file__), "src/sounds/Iku.wav")
                 if os.path.exists(wav_path):
                     try:
                         await mtd.play_wav(voice_client, wav_path, disconnect_after=False)
                     except Exception as e:
                         await message.channel.send(f"⚠️ Failed to play audio: {e}")
                 else:
-                    await message.channel.send("ℹ️ No join.wav found in the bot's src/ folder; skipping audio playback.")
+                    await message.channel.send("Couldnt find the audio file")
             else:
                 await message.channel.send("❌ You need to be in a voice channel first!")
                 mtd.log_command("join_failed", message.author)
