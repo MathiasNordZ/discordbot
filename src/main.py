@@ -67,14 +67,17 @@ async def on_message(message):
                 mtd.log_command("join", message.author)
 
                 # Try to play a local wav file after joining
-                wav_path = os.path.join(os.path.dirname(__file__), "/sounds/iku2.mp3")
-                if os.path.exists(wav_path):
+                wav_path = Path(__file__).resolve().parent / "sounds" / "iku2.mp3"
+                print(f"Looking for audio at: {wav_path}")  # console debug
+
+                if wav_path.exists():
                     try:
-                        await mtd.play_wav(voice_client, wav_path, disconnect_after=False)
+                        # ensure string path if mtd.play_wav expects it
+                        await mtd.play_wav(voice_client, str(wav_path), disconnect_after=False)
                     except Exception as e:
                         await message.channel.send(f"⚠️ Failed to play audio: {e}")
                 else:
-                    await message.channel.send("Couldnt find the audio file")
+                    await message.channel.send(f"Couldn't find the audio file at `{wav_path}`")
             else:
                 await message.channel.send("❌ You need to be in a voice channel first!")
                 mtd.log_command("join_failed", message.author)
