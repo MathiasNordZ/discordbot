@@ -4,6 +4,7 @@ import discord
 from dotenv import load_dotenv
 import datetime as td
 import methods as mtd
+from pathlib import Path
 
 load_dotenv()
 token = os.getenv("TOKEN")
