@@ -67,7 +67,7 @@ async def on_message(message):
                 mtd.log_command("join", message.author)
 
                 # Try to play a local wav file after joining
-                wav_path = os.path.join(os.path.dirname(__file__), "src/sounds/Iku.wav")
+                wav_path = os.path.join(os.path.dirname(__file__), "/sounds/Iku.wav")
                 if os.path.exists(wav_path):
                     try:
                         await mtd.play_wav(voice_client, wav_path, disconnect_after=False)
