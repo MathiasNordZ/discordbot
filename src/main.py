@@ -50,9 +50,31 @@ async def on_message(message):
         elif "join" in command or "join" in content:
             if message.author.voice:
                 channel = message.author.voice.channel
-                await channel.connect()
+                voice_client = None
+                try:
+                    voice_client = await channel.connect()
+                except Exception as e:
+                    # If already connected elsewhere, try to move the bot
+                    if message.guild and message.guild.voice_client:
+                        voice_client = message.guild.voice_client
+                        await voice_client.move_to(channel)
+                    else:
+                        await message.channel.send(f"❌ Could not connect to voice channel: {e}")
+                        mtd.log_command("join_failed", message.author)
+                        return
+
                 await message.channel.send(f"🔊 Joined {channel.name}!")
                 mtd.log_command("join", message.author)
+
+                # Try to play a local wav file after joining
+                wav_path = os.path.join(os.path.dirname(__file__), "sounds/iku.wav")
+                if os.path.exists(wav_path):
+                    try:
+                        await mtd.play_wav(voice_client, wav_path, disconnect_after=False)
+                    except Exception as e:
+                        await message.channel.send(f"⚠️ Failed to play audio: {e}")
+                else:
+                    await message.channel.send("ℹ️ No join.wav found in the bot's src/ folder; skipping audio playback.")
             else:
                 await message.channel.send("❌ You need to be in a voice channel first!")
                 mtd.log_command("join_failed", message.author)

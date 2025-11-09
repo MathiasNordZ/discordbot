@@ -203,4 +203,47 @@ async def schedule_ctf_reminder(client, channel_id, event_time):
     if delay > 0:
         await asyncio.sleep(delay)
 
-    await channel.send("@everyone v1T CTF Starter nå!!")
+    #await channel.send("@everyone v1T CTF Starter nå!!")
+
+
+async def play_wav(voice_client, file_path, disconnect_after=False):
+    """Play a local .wav (or any ffmpeg-readable) file on the given VoiceClient.
+
+    - voice_client: discord.VoiceClient instance (the connected client)
+    - file_path: absolute or relative path to the audio file
+    - disconnect_after: if True, disconnect when playback finishes
+
+    Requires ffmpeg to be installed on the host system and available on PATH.
+    """
+    if voice_client is None or not getattr(voice_client, 'is_connected', lambda: False)():
+        raise RuntimeError("Voice client is not connected")
+
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Audio file not found: {file_path}")
+
+    # Use FFmpegPCMAudio to stream any file ffmpeg can read (wav, mp3, etc.)
+    audio_source = discord.FFmpegPCMAudio(file_path)
+
+    # Stop current playback if any
+    if voice_client.is_playing():
+        voice_client.stop()
+
+    loop = asyncio.get_event_loop()
+
+    # Play and wait until finished
+    done = asyncio.Event()
+
+    def _after(err):
+        if err:
+            print(f"Error during audio playback: {err}")
+        loop.call_soon_threadsafe(done.set)
+
+    voice_client.play(audio_source, after=_after)
+
+    await done.wait()
+
+    if disconnect_after:
+        await voice_client.disconnect()
+
+    return True
+
