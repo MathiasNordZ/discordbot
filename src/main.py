@@ -147,9 +147,10 @@ async def on_message(message):
         await message.add_reaction("💦")
 
     if "lolexec" in message.content.lower():
-        await message.add_reaction(":exec:")
-        await message.add_reaction(":robot:")
-        await message.add_reaction("💦")
+        emojiExec = discord.utils.get(message.guild.emojis, name="exec")
+        emojiPom = discord.utils.get(message.guild.emojis, name="pom")
+        await message.add_reaction(emojiExec)
+        await message.add_reaction(emojiPom)
 
 print(f"TOKEN loaded: {token!r}")
 client.run(token)
