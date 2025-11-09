@@ -53,14 +53,14 @@ def b64(content):
     message_bytes = base64.b64decode(content)
     return (f"Decoded base64: {message_bytes.decode('utf-8', errors='ignore')}")
 
-def ept():
-    event_date = td.datetime(2025, 11, 8, 9)
-    now = td.datetime.now()
-    delta = event_date - now
-    days, seconds = delta.days, delta.seconds
-    hours = seconds // 3600
-    minutes = (seconds % 3600) // 60
-    return (f"Time until EPT CTF: {days} days, {hours} hours, and {minutes} minutes.")
+#def ept():
+#    event_date = td.datetime(2025, 11, 8, 9)
+#    now = td.datetime.now()
+#    delta = event_date - now
+#    days, seconds = delta.days, delta.seconds
+#    hours = seconds // 3600
+#    minutes = (seconds % 3600) // 60
+#    return (f"Time until EPT CTF: {days} days, {hours} hours, and {minutes} minutes.")
 
 def activity():
     return "ExEc since 2025"
