@@ -146,5 +146,9 @@ async def on_message(message):
         await message.add_reaction("👋")
         await message.add_reaction("💦")
 
+    if "lolexec" in message.content.lower():
+        await message.add_reaction(":exec:")
+        await message.add_reaction(":robot:")
+
 print(f"TOKEN loaded: {token!r}")
 client.run(token)
