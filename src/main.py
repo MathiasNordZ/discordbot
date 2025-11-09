@@ -20,7 +20,7 @@ async def on_ready():
     channel = client.get_channel(1427570847241207910)  # replace with your channel id
     if channel:
         await channel.send('Bot is now online!')
-    activity = discord.Game(name=mtd.eptShort())
+    activity = discord.Game(name=mtd.activity())
     await client.change_presence(activity=activity)
 
     # Ensure the bot is fully ready before scheduling the reminder
