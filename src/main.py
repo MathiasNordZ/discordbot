@@ -147,10 +147,6 @@ async def on_message(message):
         await message.add_reaction("💦")
 
     if "lolexec" in message.content.lower():
-        emojiExec = discord.utils.get(message.guild.emojis, name="exec")
-        emojiPom = discord.utils.get(message.guild.emojis, name="pom")
-        await message.add_reaction(emojiExec)
-        await message.add_reaction(emojiPom)
         await message.channel.send("https://cdn.discordapp.com/attachments/1414944813031231611/1437047515894775929/3dgifmaker78214.gif")
 
 print(f"TOKEN loaded: {token!r}")
