@@ -37,10 +37,10 @@ def check_for_tickets_when_sold_out(link):
     else:
         return False
 
-def biletter(link):
-    if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
-        return(f"Tickets available at {link}")
-    else:
+#def biletter(link):
+#    if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
+#        return(f"Tickets available at {link}")
+#    else:
         return ("No tickets yet!")
 
 def updateBot():
