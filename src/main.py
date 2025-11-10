@@ -102,6 +102,17 @@ async def on_message(message):
             mtd.log_command("test bot", message.author)
             mtd.testBot() #Må kalles her fordi return må være sist i en metode og scriptet dreper prosessen så den kjører aldri message send....
 
+        elif "cmdboard" in command:
+            # send the leaderboard and log the command
+            await message.channel.send(mtd.cmd_board())
+            mtd.log_command("cmdboard", message.author)
+            # also increment the per-user command count
+            try:
+                mtd.increment_cmd_count(message.author)
+            except Exception:
+                # ignore errors so the bot doesn't crash if counting fails
+                pass
+
         elif command.startswith("base64"):
             await message.channel.send(mtd.b64(message.content[10:].strip()))
             mtd.log_command("base64", message.author)

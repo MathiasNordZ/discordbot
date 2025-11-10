@@ -243,3 +243,44 @@ async def play_wav(voice_client, file_path, disconnect_after=False):
 
     return True
 
+def _load_counts():
+    if not _COUNTS_FILE.exists():
+        return {}
+    try:
+        return json.load(_COUNTS_FILE.open("r", encoding="utf-8"))
+    except Exception:
+        return {}
+
+def _save_counts(data):
+    _DATA_DIR.mkdir(parents=True, exist_ok=True)
+    with _COUNTS_FILE.open("w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
+def increment_cmd_count(author):
+    """
+    Call this whenever a user issues a command.
+    `author` is the discord.Member or discord.User object from the message.
+    """
+    data = _load_counts()
+    uid = str(getattr(author, "id", author))
+    name = getattr(author, "display_name", None) or getattr(author, "name", None) or str(author)
+    entry = data.get(uid, {"name": name, "count": 0})
+    entry["name"] = name  # keep name up to date
+    entry["count"] = entry.get("count", 0) + 1
+    data[uid] = entry
+    _save_counts(data)
+
+def cmd_board(top: int = 20) -> str:
+    """
+    Returns a formatted scoreboard string listing users by command count.
+    """
+    data = _load_counts()
+    if not data:
+        return "No command usage recorded yet."
+    items = sorted(data.items(), key=lambda kv: kv[1].get("count", 0), reverse=True)
+    lines = ["Command leaderboard:"]
+    for i, (uid, entry) in enumerate(items[:top], start=1):
+        name = entry.get("name", uid)
+        count = entry.get("count", 0)
+        lines.append(f"{i}. {name} — {count}")
+    return "\n".join(lines)
