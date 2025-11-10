@@ -282,7 +282,7 @@ def cmd_board(top: int = 20) -> str:
     if not data:
         return "No command usage recorded yet."
     items = sorted(data.items(), key=lambda kv: kv[1].get("count", 0), reverse=True)
-    lines = ["Command leaderboard:"]
+    lines = ["**🏆 Command Leaderboard 🏆**"]
     for i, (uid, entry) in enumerate(items[:top], start=1):
         name = entry.get("name", uid)
         count = entry.get("count", 0)
