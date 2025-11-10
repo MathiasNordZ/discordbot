@@ -1,10 +1,10 @@
 # File: src/main.py
 import os
-
-from dotenv import load_dotenv
 import discord
+from dotenv import load_dotenv
 import datetime as td
 import methods as mtd
+from pathlib import Path
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -20,7 +20,7 @@ async def on_ready():
     channel = client.get_channel(1427570847241207910)  # replace with your channel id
     if channel:
         await channel.send('Bot is now online!')
-    activity = discord.Game(name=mtd.eptShort())
+    activity = discord.Game(name=mtd.activity())
     await client.change_presence(activity=activity)
 
     # Ensure the bot is fully ready before scheduling the reminder
@@ -41,8 +41,8 @@ async def on_message(message):
     content = raw.lower().strip()
 
     # Trigger: messages starting with "key"
-    if content.startswith("key "):
-        command = content[len("key "):].strip()
+    if content.startswith("exec "):
+        command = content[len("exec "):].strip()
 
         if "help" in command:
             await message.channel.send(mtd.help())
@@ -51,9 +51,34 @@ async def on_message(message):
         elif "join" in command or "join" in content:
             if message.author.voice:
                 channel = message.author.voice.channel
-                await channel.connect()
+                voice_client = None
+                try:
+                    voice_client = await channel.connect()
+                except Exception as e:
+                    # If already connected elsewhere, try to move the bot
+                    if message.guild and message.guild.voice_client:
+                        voice_client = message.guild.voice_client
+                        await voice_client.move_to(channel)
+                    else:
+                        await message.channel.send(f"❌ Could not connect to voice channel: {e}")
+                        mtd.log_command("join_failed", message.author)
+                        return
+
                 await message.channel.send(f"🔊 Joined {channel.name}!")
                 mtd.log_command("join", message.author)
+
+                # Try to play a local wav file after joining
+                wav_path = Path(__file__).resolve().parent / "sounds" / "iku2.mp3"
+                print(f"Looking for audio at: {wav_path}")  # console debug
+
+                if wav_path.exists():
+                    try:
+                        # ensure string path if mtd.play_wav expects it
+                        await mtd.play_wav(voice_client, str(wav_path), disconnect_after=False)
+                    except Exception as e:
+                        await message.channel.send(f"⚠️ Failed to play audio: {e}")
+                else:
+                    await message.channel.send(f"Couldn't find the audio file at `{wav_path}`")
             else:
                 await message.channel.send("❌ You need to be in a voice channel first!")
                 mtd.log_command("join_failed", message.author)
@@ -120,6 +145,9 @@ async def on_message(message):
         await message.add_reaction("🔑")
         await message.add_reaction("👋")
         await message.add_reaction("💦")
+
+    if "lolexec" in message.content.lower():
+        await message.channel.send("https://cdn.discordapp.com/attachments/1414944813031231611/1437047515894775929/3dgifmaker78214.gif")
 
 print(f"TOKEN loaded: {token!r}")
 client.run(token)

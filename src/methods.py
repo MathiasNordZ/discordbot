@@ -37,10 +37,10 @@ def check_for_tickets_when_sold_out(link):
     else:
         return False
 
-def biletter(link):
-    if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
-        return(f"Tickets available at {link}")
-    else:
+#def biletter(link):
+#    if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
+#        return(f"Tickets available at {link}")
+#    else:
         return ("No tickets yet!")
 
 def updateBot():
@@ -53,21 +53,17 @@ def b64(content):
     message_bytes = base64.b64decode(content)
     return (f"Decoded base64: {message_bytes.decode('utf-8', errors='ignore')}")
 
-def ept():
-    event_date = td.datetime(2025, 11, 8, 9)
-    now = td.datetime.now()
-    delta = event_date - now
-    days, seconds = delta.days, delta.seconds
-    hours = seconds // 3600
-    minutes = (seconds % 3600) // 60
-    return (f"Time until EPT CTF: {days} days, {hours} hours, and {minutes} minutes.")
+#def ept():
+#    event_date = td.datetime(2025, 11, 8, 9)
+#    now = td.datetime.now()
+#    delta = event_date - now
+#    days, seconds = delta.days, delta.seconds
+#    hours = seconds // 3600
+#    minutes = (seconds % 3600) // 60
+#    return (f"Time until EPT CTF: {days} days, {hours} hours, and {minutes} minutes.")
 
-def eptShort():
-    event_date = td.datetime(2025, 11, 8, 9)
-    now = td.datetime.now()
-    delta = event_date - now
-    days, seconds = delta.days, delta.seconds
-    return (f"EPT in: {days} days")
+def activity():
+    return "ExEc since 2025"
 
 
 # -------------------------------
@@ -203,4 +199,46 @@ async def schedule_ctf_reminder(client, channel_id, event_time):
     if delay > 0:
         await asyncio.sleep(delay)
 
-    await channel.send("@everyone v1T CTF Starter nå!!")
+    #await channel.send("@everyone v1T CTF Starter nå!!")
+
+
+async def play_wav(voice_client, file_path, disconnect_after=False):
+    """Play a local .wav (or any ffmpeg-readable) file on the given VoiceClient.
+
+    - voice_client: discord.VoiceClient instance (the connected client)
+    - file_path: absolute or relative path to the audio file
+    - disconnect_after: if True, disconnect when playback finishes
+
+    Requires ffmpeg to be installed on the host system and available on PATH.
+    """
+    if voice_client is None or not getattr(voice_client, 'is_connected', lambda: False)():
+        raise RuntimeError("Voice client is not connected")
+
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Audio file not found: {file_path}")
+
+    # Use FFmpegPCMAudio to stream any file ffmpeg can read (wav, mp3, etc.)
+    audio_source = discord.FFmpegPCMAudio(file_path)
+
+    # Stop current playback if any
+    if voice_client.is_playing():
+        voice_client.stop()
+
+    loop = asyncio.get_event_loop()
+
+    # Play and wait until finished
+    done = asyncio.Event()
+
+    def _after(err):
+        if err:
+            print(f"Error during audio playback: {err}")
+        loop.call_soon_threadsafe(done.set)
+
+    voice_client.play(audio_source, after=_after)
+
+    await done.wait()
+
+    if disconnect_after:
+        await voice_client.disconnect()
+
+    return True
