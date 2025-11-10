@@ -8,6 +8,7 @@ import subprocess
 import base64
 import datetime as td
 import urllib.request
+from pathlib import Path
 import asyncio
 
 load_dotenv()
@@ -269,6 +270,9 @@ def increment_cmd_count(author):
     entry["count"] = entry.get("count", 0) + 1
     data[uid] = entry
     _save_counts(data)
+
+_DATA_DIR = Path(__file__).resolve().parent / "data"
+_COUNTS_FILE = _DATA_DIR / "cmd_counts.json"
 
 def cmd_board(top: int = 20) -> str:
     """
