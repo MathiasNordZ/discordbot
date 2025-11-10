@@ -1,3 +1,4 @@
 .env
 .venv
 src/data/rep.json
+src/data/cmd_counts.json
