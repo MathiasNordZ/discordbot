@@ -144,7 +144,7 @@ async def on_message(message):
         else:
             emoji = discord.utils.get(message.guild.emojis, name="minusrep")
             await message.add_reaction(emoji)
-            mtd.decrement_cmd_count(message.author)
+            mtd.decrement_cmd_count(message.author) #Possible race cond?
             mtd.log_command("unknown_command", message.author)
 
 
