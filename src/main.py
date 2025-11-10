@@ -137,10 +137,16 @@ async def on_message(message):
         elif "repboard" in command:
             await message.channel.send(mtd.getLeaderboard())
             mtd.log_command("repboard", message.author)
+
+        elif "cmdboard" in command:
+            await message.channel.send(mtd.cmd_board())
+
         else:
             emoji = discord.utils.get(message.guild.emojis, name="minusrep")
             await message.add_reaction(emoji)
             mtd.log_command("unknown_command", message.author)
+
+
 
     # Standalone keyword checks
     if "keystrokers" in message.content.lower():
