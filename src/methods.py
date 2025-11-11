@@ -42,7 +42,7 @@ def check_for_tickets_when_sold_out(link):
 #    if b"Tilgjengelige varer" in urllib.request.urlopen(link).read():
 #        return(f"Tickets available at {link}")
 #    else:
-        return ("No tickets yet!")
+#        return ("No tickets yet!")
 
 def updateBot():
     subprocess.run(["./roll-out.sh"])
@@ -64,8 +64,59 @@ def b64(content):
 #    return (f"Time until EPT CTF: {days} days, {hours} hours, and {minutes} minutes.")
 
 def activity():
-    return "ExEc since 2025"
+    try:
+        # KeyStrokers/LOLExEc team ID on CTFtime
+        team_id = 410745
+        url = f"https://ctftime.org/api/v1/teams/{team_id}/"
 
+        # Fetch team data
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        response = urllib.request.urlopen(req)
+        data = json.loads(response.read().decode('utf-8'))
+
+        # Get upcoming events the team is registered for
+        now = td.datetime.now()
+        upcoming_events = []
+
+        # CTFtime returns events in 'events' field (past events for the year)
+        # We need to check which ones are in the future
+        if 'events' in data:
+            for event in data['events']:
+                try:
+                    # Parse the event date (format varies, might be in 'ctf_start')
+                    start_str = event.get('ctf_start', '')
+                    if start_str:
+                        # CTFtime format: "2025-03-15T12:00:00+00:00"
+                        start_time = td.datetime.strptime(start_str.split('+')[0], '%Y-%m-%dT%H:%M:%S')
+
+                        if start_time > now:
+                            upcoming_events.append({
+                                'name': event.get('ctf', {}).get('title', 'Unknown CTF'),
+                                'start': start_time
+                            })
+                except:
+                    continue
+
+        # Sort by start time and get the nearest one
+        if upcoming_events:
+            upcoming_events.sort(key=lambda x: x['start'])
+            next_ctf = upcoming_events[0]
+
+            delta = next_ctf['start'] - now
+            days = delta.days
+
+            if days == 0:
+                return f"{next_ctf['name']} starts today!"
+            elif days == 1:
+                return f"{next_ctf['name']} in 1 day"
+            else:
+                return f"{next_ctf['name']} in {days} days"
+        else:
+            return "ExEc since 2025"
+
+    except Exception as e:
+        print(f"Error fetching KeyStrokers CTF data: {e}")
+        return "ExEc since 2025"
 
 # -------------------------------
 # JSON Handling
