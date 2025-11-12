@@ -103,6 +103,10 @@ async def on_message(message):
             mtd.log_command("test bot", message.author)
             mtd.testBot() #Må kalles her fordi return må være sist i en metode og scriptet dreper prosessen så den kjører aldri message send....
 
+        elif "ping" in command:
+            await message.channel.send(mtd.ping())
+            mtd.log_command("ping", message.author)
+
 
         elif command.startswith("base64"):
             await message.channel.send(mtd.b64(message.content[10:].strip()))
