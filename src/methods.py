@@ -241,4 +241,59 @@ async def play_wav(voice_client, file_path, disconnect_after=False):
     if disconnect_after:
         await voice_client.disconnect()
 
+    # python
+    import requests
+    from bs4 import BeautifulSoup
+    import re
+    from typing import Dict, List
+
+WEEKDAYS = ["mandag", "tirsdag", "onsdag", "torsdag", "fredag"]
+
+def get_sit_canteen_menu(url: str = "https://www.sit.no/mat-og-drikke/vare-spisesteder/sit-kafe-gjovik",
+                        timeout: int = 10) -> Dict[str, List[str]]:
+    """
+    Scrape the given SiT canteen page and return a dict:
+    { 'mandag': ['Dish 1', 'Dish 2'], 'tirsdag': [...] , ... }
+    """
+    try:
+        resp = requests.get(url, headers={"User-Agent": "python-requests"}, timeout=timeout)
+        resp.raise_for_status()
+    except Exception:
+        return {}
+    soup = BeautifulSoup(resp.text, "html.parser")
+    result: Dict[str, List[str]] = {}
+    heading_tags = soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+                                 text=re.compile(r'\b(' + '|'.join(WEEKDAYS) + r')\b', re.I))
+    for heading in heading_tags:
+        text = heading.get_text(separator=" ").strip().lower()
+        # find which weekday appears in the heading text
+        weekday = next((wd for wd in WEEKDAYS if wd in text), None)
+        if not weekday:
+            continue
+        # find the nearest table after the heading (site structure uses a table for the menu)
+        table = heading.find_next('table')
+        items: List[str] = []
+        if table:
+            # collect text from td > p or td directly
+            for td in table.find_all('td'):
+                # prefer p tags inside td
+                p = td.find('p')
+                if p:
+                    lines = [ln.strip() for ln in p.get_text(separator="\n").splitlines() if ln.strip()]
+                    items.extend(lines)
+                else:
+                    txt = td.get_text(separator="\n").strip()
+                    if txt:
+                        lines = [ln.strip() for ln in txt.splitlines() if ln.strip()]
+                        items.extend(lines)
+        # deduplicate and keep order
+        seen = set()
+        filtered = []
+        for it in items:
+            if it not in seen:
+                seen.add(it)
+                filtered.append(it)
+        result[weekday] = filtered
+    return result
+
     return True
