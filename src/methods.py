@@ -9,6 +9,10 @@ import base64
 import datetime as td
 import urllib.request
 import asyncio
+import requests
+from bs4 import BeautifulSoup
+import re
+from typing import Dict, List
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -241,11 +245,6 @@ async def play_wav(voice_client, file_path, disconnect_after=False):
     if disconnect_after:
         await voice_client.disconnect()
 
-    # python
-    import requests
-    from bs4 import BeautifulSoup
-    import re
-    from typing import Dict, List
 
 WEEKDAYS = ["mandag", "tirsdag", "onsdag", "torsdag", "fredag"]
 
