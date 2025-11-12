@@ -135,6 +135,11 @@ async def on_message(message):
         elif "repboard" in command:
             await message.channel.send(mtd.getLeaderboard())
             mtd.log_command("repboard", message.author)
+
+        elif "kantina" in command:
+            await message.channel.send(mtd.get_sit_canteen_menu())
+            mtd.log_command("kantina", message.author)
+
         else:
             emoji = discord.utils.get(message.guild.emojis, name="minusrep")
             await message.add_reaction(emoji)
