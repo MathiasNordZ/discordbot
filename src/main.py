@@ -1,5 +1,6 @@
 # File: src/main.py
 import os
+import asyncio
 import discord
 from dotenv import load_dotenv
 import datetime as td
@@ -107,6 +108,10 @@ async def on_message(message):
             await message.channel.send(mtd.ping())
             mtd.log_command("ping", message.author)
 
+        elif command.startswith("top10"):
+            response = await asyncio.to_thread(mtd.top10_gap)
+            await message.channel.send(response)
+            mtd.log_command("top10", message.author)
 
         elif command.startswith("base64"):
             await message.channel.send(mtd.b64(message.content[10:].strip()))

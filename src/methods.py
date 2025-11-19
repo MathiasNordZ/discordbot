@@ -20,6 +20,9 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 FILE_PATH = "data/rep.json"
+_SRC_DIR = Path(__file__).resolve().parent
+_DATA_DIR = _SRC_DIR / "data"
+_LOLEXEC_RP_FILE = _DATA_DIR / "lolexec_rp.txt"
 
 
 def help():
@@ -56,6 +59,65 @@ def b64(content):
 
 def ping():
     return "Pong! 🏓"
+
+def _fetch_json(url: str, timeout: int = 10):
+    """Fetch JSON data from an URL with a basic User-Agent header."""
+    req = urllib.request.Request(url, headers={'User-Agent': 'lolexec-discord-bot/1.0'})
+    with urllib.request.urlopen(req, timeout=timeout) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+def _read_lolexec_rating_points() -> float:
+    """Load LOLEXEC rating points from data/lolexec_rp.txt."""
+    try:
+        content = _LOLEXEC_RP_FILE.read_text(encoding="utf-8").strip()
+    except FileNotFoundError:
+        raise FileNotFoundError("Missing data/lolexec_rp.txt")
+
+    if not content:
+        raise ValueError("lolexec_rp.txt is empty")
+
+    try:
+        return float(content)
+    except ValueError as exc:
+        raise ValueError("Invalid rating value in lolexec_rp.txt") from exc
+
+def top10_gap():
+    """Return how far LOLEXEC is behind the Norwegian 10th spot on CTFtime."""
+    country_code = "no"
+    team_name = "LOLEXEC"
+
+    try:
+        team_points = _read_lolexec_rating_points()
+    except Exception as exc:
+        return f"⚠️ Unable to load LOLEXEC rating: {exc}"
+
+    try:
+        country_top = _fetch_json(f"https://ctftime.org/api/v1/top-by-country/{country_code}/")
+    except Exception as exc:
+        return f"⚠️ Unable to fetch CTFtime data: {exc}"
+
+    tenth_entry = None
+    for entry in country_top:
+        if entry.get("country_place") == 10:
+            tenth_entry = entry
+            break
+    if tenth_entry is None and len(country_top) >= 10:
+        tenth_entry = country_top[9]
+
+    if not tenth_entry:
+        return "⚠️ Could not find the 10th place team for Norway on CTFtime."
+
+    tenth_name = tenth_entry.get("team_name", "Unknown team")
+    tenth_points = float(tenth_entry.get("points") or 0.0)
+
+    diff = round(tenth_points - team_points, 2)
+    if diff <= 0:
+        return (f"{team_name} has {team_points:.2f} pts and is already ahead of "
+                f"{tenth_name} ({tenth_points:.2f} pts) by {abs(diff):.2f} pts.")
+
+    return (f"{team_name} sits at {team_points:.2f} pts. "
+            f"{tenth_name} holds 10th place with {tenth_points:.2f} pts, "
+            f"so LOLEXEC is {diff:.2f} pts behind.")
 
 #def ept():
 #    event_date = td.datetime(2025, 11, 8, 9)
@@ -340,7 +402,6 @@ def decrement_cmd_count(author):
     _save_counts(data)
 
 
-_DATA_DIR = Path(__file__).resolve().parent / "data"
 _COUNTS_FILE = _DATA_DIR / "cmd_counts.json"
 
 def cmd_board(top: int = 20) -> str:
