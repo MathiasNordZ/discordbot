@@ -21,7 +21,7 @@ client = discord.Client(intents=intents)
 
 FILE_PATH = "data/rep.json"
 _SRC_DIR = Path(__file__).resolve().parent
-_LOLEXEC_RP_FILE = "data/lolexec_rp.txt"
+_LOLEXEC_RP_FILE = Path("data/lolexec_rp.txt")
 
 
 def help():
