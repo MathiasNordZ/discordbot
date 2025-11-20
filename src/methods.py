@@ -114,9 +114,13 @@ def top10_gap():
         return (f"{team_name} has {team_points:.2f} pts and is already ahead of "
                 f"{tenth_name} ({tenth_points:.2f} pts) by {abs(diff):.2f} pts.")
 
-    return (f"{team_name} sits at {team_points:.2f} pts. "
-            f"{tenth_name} holds 10th place with {tenth_points:.2f} pts, "
-            f"so {team_name} is {diff:.2f} pts behind.", " Thats ", (team_points/tenth_points)*100, "% of the way there!")
+    pct = (team_points / tenth_points) * 100
+    return (
+        f"{team_name} — {team_points:.2f} pts\n"
+        f"{tenth_name} — 10th place: {tenth_points:.2f} pts\n\n"
+        f"Difference: {diff:.2f} pts behind\n"
+        f"Progress: {pct:.1f}% of the way to 10th place"
+    )
 
 #def ept():
 #    event_date = td.datetime(2025, 11, 8, 9)
