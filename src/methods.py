@@ -21,8 +21,7 @@ client = discord.Client(intents=intents)
 
 FILE_PATH = "data/rep.json"
 _SRC_DIR = Path(__file__).resolve().parent
-_DATA_DIR = _SRC_DIR / "data"
-_LOLEXEC_RP_FILE = _DATA_DIR / "lolexec_rp.txt"
+_LOLEXEC_RP_FILE = "data/lolexec_rp.txt"
 
 
 def help():
@@ -117,7 +116,7 @@ def top10_gap():
 
     return (f"{team_name} sits at {team_points:.2f} pts. "
             f"{tenth_name} holds 10th place with {tenth_points:.2f} pts, "
-            f"so LOLEXEC is {diff:.2f} pts behind.")
+            f"so {team_name} is {diff:.2f} pts behind.", " Thats ", (team_points/tenth_points)*100, "% of the way there!")
 
 #def ept():
 #    event_date = td.datetime(2025, 11, 8, 9)
