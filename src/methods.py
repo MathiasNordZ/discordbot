@@ -360,15 +360,13 @@ async def play_wav(voice_client, file_path, disconnect_after=False):
     return True
 
 def _load_counts():
-    if not _COUNTS_FILE.exists():
-        return {}
     try:
         return json.load(_COUNTS_FILE.open("r", encoding="utf-8"))
     except Exception:
         return {}
 
 def _save_counts(data):
-    _DATA_DIR.mkdir(parents=True, exist_ok=True)
+    _COUNTS_FILE.parent.mkdir(parents=True, exist_ok=True)
     with _COUNTS_FILE.open("w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
@@ -401,7 +399,7 @@ def decrement_cmd_count(author):
     _save_counts(data)
 
 
-_COUNTS_FILE = "data/cmd_counts.json"
+_COUNTS_FILE = Path("data/cmd_counts.json")
 
 def cmd_board(top: int = 20) -> str:
     """
