@@ -401,7 +401,7 @@ def decrement_cmd_count(author):
     _save_counts(data)
 
 
-_COUNTS_FILE = _DATA_DIR / "cmd_counts.json"
+_COUNTS_FILE = "data/cmd_counts.json"
 
 def cmd_board(top: int = 20) -> str:
     """
