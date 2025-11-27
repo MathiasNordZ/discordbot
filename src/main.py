@@ -7,8 +7,6 @@ import datetime as td
 import methods as mtd
 from pathlib import Path
 
-from src.methods import debug_ctftime
-
 load_dotenv()
 token = os.getenv("TOKEN")
 
@@ -151,10 +149,6 @@ async def on_message(message):
 
         elif "cmdboard" in command:
             await message.channel.send(mtd.cmd_board())
-
-        elif "debugctftime" in command:
-            await message.channel.send("Debug: Running CTFtime fetch...")
-            debug_ctftime()
 
         else:
             emoji = discord.utils.get(message.guild.emojis, name="minusrep")

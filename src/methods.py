@@ -186,25 +186,6 @@ def activity():
         print(f"Error fetching KeyStrokers CTF data: {e}")
         return "ExEc since 2025"
 
-
-def debug_ctftime():
-    """Temporary function to see what CTFtime API returns"""
-    try:
-        team_id = 410745
-        url = f"https://ctftime.org/api/v1/teams/{team_id}/"
-
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        response = urllib.request.urlopen(req)
-        data = json.loads(response.read().decode('utf-8'))
-
-        # Save to file for inspection
-        with open('ctftime_debug.json', 'w') as f:
-            json.dump(data, f, indent=2)
-
-        return "Debug data saved to ctftime_debug.json - check the file!"
-    except Exception as e:
-        return f"Error: {str(e)}"
-
 # -------------------------------
 # JSON Handling
 # -------------------------------
