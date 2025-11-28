@@ -243,7 +243,7 @@ def log_command(command, author):
 def pRep(message, user):
     if user == message.author:
         return "❌ You cannot give reputation to yourself!"
-    elif user in ["Simen", "Frikk", "Mathias", "Odin", "Joakim", "Nick", "Arpit"]:
+    elif user in ["Simen", "Frikk", "Mathias", "Odin", "Joakim", "Nick", "Arpit", "Tinius", "Einar"]:
         """Give +1 reputation to a user."""
         emoji = discord.utils.get(message.guild.emojis, name="plusrep")
         if emoji is None:
